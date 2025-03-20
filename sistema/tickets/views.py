@@ -18,7 +18,6 @@ def tempo_decorrido(request, pk):
 @login_required
 def ticket_list(request): #? Exibe a lista de incidentes cadastrados
     """ Lista todos os tickets cadastrados no sistema. """
-    # tickets = Ticket.objects.all()
     tickets = Ticket.objects.exclude(status="Fechado")
     return render(request, 'tickets/ticket_list.html', {
         'tickets': tickets
@@ -113,6 +112,13 @@ def ticket_detail(request, pk): #? Permite visualizar detalhes do incidente
     return render(request, 'tickets/ticket_detail.html', {'ticket': ticket})
 
 @login_required
+def ticket_gestao_problemas(request): #TODO: Criar tela para Gestão de Problemas
+    """
+    Gestão de Problemas
+    """
+    return render(request, 'tickets/ticket_gestao_problemas.html')
+
+@login_required
 def ticket_dashboard(request): #? Dahsboard com os indicadores
     """
     Apresenta a tela principal de Dashboard com os indicadores abaixo.
@@ -174,18 +180,3 @@ def ticket_registro(request):
         form = UserCreationForm()
 
     return render(request, "registration/registro.html", {"form": form})
-
-@login_required
-def perfil(request):
-    """
-    Tela de perfil de usuário
-    """
-    if request.method == 'POST':
-        form = PerfilForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Perfil atualizado com sucesso!')
-            return redirect('perfil')
-    else:
-        form = PerfilForm(instance=request.user)
-    return render(request, 'registration/perfil.html', {'form': form})
