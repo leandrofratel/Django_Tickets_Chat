@@ -22,23 +22,23 @@
 
                     <!-- Itens do Menu -->
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="">
+                        <a class="nav-link text-white" href="{% url 'perfil' %}">
                             <i class="bi bi-person"> <span class="ms-2">Perfil</span> </i>
                         </a>
-                        <a class="nav-link text-white" href="">
+                        <a class="nav-link text-white" href="{% url 'ticket_dashboard' %}">
                             <i class="bi bi-bar-chart"> <span class="ms-2">Dashboard</span> </i>
                         </a>
 
                         <!--Linha vertical-->
                         <a><hr></a>
                         
-                        <a class="nav-link text-white" href="">
+                        <a class="nav-link text-white" href="{% url 'ticket_create' %}">
                             <i class="bi bi-pencil"> <span class="ms-2">Cadastrar Incidente</span> </i>
                         </a>
-                        <a class="nav-link text-white" href="">
+                        <a class="nav-link text-white" href="{% url 'ticket_list' %}">
                             <i class="bi bi-list-ul"> <span class="ms-2">Todos os Incidentes</span> </i>
                         </a>
-                        <a class="nav-link text-white" href="">
+                        <a class="nav-link text-white" href="{% url 'ticket_archive' %}">
                             <i class="bi bi-archive"> <span class="ms-2">Incidentes Arquivados</span> </i>
                         </a>
 
@@ -48,7 +48,7 @@
                         <a class="nav-link text-white" href="">
                             <i class="bi bi-exclamation-triangle"> <span class="ms-2">Gestão de Problemas</span> </i>
                         </a>
-                        <a class="nav-link text-white" href="">
+                        <a class="nav-link text-white" href="{% url 'rooms' %}">
                             <i class="bi bi-chat-right-dots"> <span class="ms-2">Chat</span> </i>
                         </a>
                     </li>

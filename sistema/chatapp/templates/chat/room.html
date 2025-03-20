@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="container mt-3">
+    <h2 class="text-dark">{{ room_name }}</h2>
+    <a href="{% url 'rooms' %}">
+        <button type="button" class="btn btn-outline-dark">Voltar</button>
+    </a>
+
+    <div class="card shadow-lg mt-3">
+        <!-- Área de mensagens -->
+        <div class="card-body" id="chatbox" style="max-height: 400px; overflow-y: auto; background-color: #f8f9fa; border-radius: 10px;">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="d-flex {% if message.user == request.user %} justify-content-end {% else %} justify-content-start {% endif %} mb-2">
+                        <div class="p-2 rounded text-white {% if message.user == request.user %} bg-primary {% else %} bg-secondary {% endif %}" style="max-width: 70%;">
+                            <strong>{{ message.user.username }}</strong><br>
+                            {{ message.content }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted text-center">Nenhuma mensagem ainda.</p>
+            {% endif %}
+        </div>
+
+        <!-- Formulário de envio de mensagens -->
+        <div class="card-footer bg-white">
+            <form class="d-flex">
+                <input class="form-control me-2" placeholder="Digite sua mensagem..." id="my_input" type="text" required>
+                <button type="button" id="submit_button" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Enviar
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{ slug|json_script:"room_slug" }}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chatbox = document.querySelector("#chatbox");
+    const inputField = document.querySelector("#my_input");
+    const sendButton = document.querySelector("#submit_button");
+    const roomName = JSON.parse(document.getElementById('room_slug').textContent);
+    const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/" + roomName + "/");
+
+    function scrollToBottom() {
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    scrollToBottom();
+
+    chatSocket.onopen = function () {
+        console.log("Conexão estabelecida!");
+    };
+
+    chatSocket.onclose = function () {
+        console.log("Conexão fechada inesperadamente!");
+    };
+
+    function sendMessage() {
+        const messageInput = inputField.value.trim();
+
+        if (messageInput.length > 0) {
+            chatSocket.send(JSON.stringify({
+                message: messageInput,
+                username: "{{ request.user.username }}",
+                room_name: "{{ room_name }}"
+            }));
+            inputField.value = "";
+        }
+    }
+
+    inputField.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    sendButton.addEventListener("click", sendMessage);
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${data.username}</strong>: ${data.message}`;
+        
+        div.classList.add("p-2", "rounded", "text-white", "mb-2");
+        if (data.username === "{{ request.user.username }}") {
+            div.classList.add("bg-primary", "text-end", "align-self-end");
+        } else {
+            div.classList.add("bg-secondary", "text-start", "align-self-start");
+        }
+
+        chatbox.appendChild(div);
+        scrollToBottom();
+    };
+});
+</script>
+
+{% else %}
+<!-- Mensagem para usuários não logados -->
+<div class="container mt-3">
+    <div class="alert alert-info text-center">
+        <h5 class="mb-0">Você não está logado</h5>
+        <a href="{% url 'login' %}" class="btn btn-outline-dark mt-2">Log In</a>
+    </div>
+</div>
+{% endif %}
+
+<br/>
+{% endblock %}

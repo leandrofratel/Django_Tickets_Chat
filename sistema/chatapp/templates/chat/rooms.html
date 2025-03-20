@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="container mt-3">
+    <h2>Todas as Salas</h2>
+    <hr>
+    {% if rooms %}
+    <div class="row equal">
+        {% for room in rooms %}
+        <div class="col-sm-4 d-flex pb-3">
+            <div class="card bg-light mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ room.name }}</h5>
+                    <a href="{% url 'room' slug=room.slug %}" class="btn btn-outline-secondary">Acessar Sala</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        Nenhuma sala disponível no momento!
+    </div>
+    {% endif %}
+</div>
+
+{% else %}
+<div class="container mt-3">
+    <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
+        <h5 class="mb-0">Você não está logado</h5>
+        <a href="{% url 'login' %}" class="btn btn-light">Log In</a>
+    </div>
+</div>
+{% endif %}
+
+<br/>
+{% endblock %}
