@@ -34,8 +34,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "crispy_forms",
-    "django_bootstrap5",
+    'crispy_forms',
+    'django_bootstrap5',
+    'django.contrib.humanize',
 
     #* Apps
     'chatapp',

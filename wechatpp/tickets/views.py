@@ -1,7 +1,6 @@
 from .forms import PerfilForm
 from django.http import JsonResponse
 from django.contrib import messages
-from django.contrib.auth import login
 from .forms import TicketForm, TicketUpdateForm
 from .models import Ticket, TicketImage, TicketFile
 from django.contrib.auth.forms import UserCreationForm
