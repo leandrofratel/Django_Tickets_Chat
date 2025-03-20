@@ -1,0 +1,56 @@
+.nav-link:hover {
+    background-color: #004369; /* Cor azul */
+    color: white; /* Texto branco */
+}
+
+#sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 270px;
+    z-index: 1000;
+    overflow-y: auto; /* Permite scroll se o conteúdo for muito longo */
+}
+
+.navbar {
+    width: 100%;
+}
+
+.navbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+}
+
+#page-content-wrapper {
+    margin-left: 270px; /* Compensa a largura do menu */
+    width: calc(100% - 270px);
+}
+
+/* Ajuste para dispositivos móveis (opcional) */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        margin-left: -270px; /* Esconde o menu */
+    }
+
+    #page-content-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    #sidebar.active {
+        margin-left: 0; /* Mostra o menu quando ativo */
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        left: 0;
+        width: 100%;
+    }
+}

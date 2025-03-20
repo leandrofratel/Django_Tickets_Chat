@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2 class="mb-4">Dashboard de Incidentes</h2>
+
+    <!-- Status -->
+    <div class="row">
+        <div>
+            <!-- Subtítulo -->
+            <h5 style="color: rgb(75, 75, 75);">Contagem dos Status</h5>
+        </div>
+        <!-- Card para Incidentes Abertos -->
+        <div class="col-md-2 mb-1">
+            <div class="card text-white border border-0" style="background-color: #004369;">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ incidentes_abertos }}</p>
+                    <p class="card-text">Incidentes Abertos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para Incidentes em Andamento -->
+        <div class="col-md-2 mb-1">
+            <div class="card text-gray border border-0" style="background-color: #f5bf42;">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ incidentes_andamento }}</p>
+                    <p class="card-text">Em Andamento</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para Incidentes em Analise -->
+        <div class="col-md-2 mb-1">
+            <div class="card text-gray border border-0" style="background-color: #f5bf42;">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ incidentes_analise }}</p>
+                    <p class="card-text">Incidentes em Análise</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para Incidentes Sala de Crise -->
+        <div class="col-md-2 mb-1">
+            <div class="card text-gray border border-0" style="background-color: #f5bf42;">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ incidentes_crise }}</p>
+                    <p class="card-text">Sala de Crise</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para Incidentes Resolvidos -->
+        <div class="col-md-2 mb-1">
+            <div class="card text-white border border-0" style="background-color: #4b8d09;">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ incidentes_resolvidos }}</p>
+                    <p class="card-text">Incidentes Resolvidos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para Incidentes Fechados -->
+        <div class="col-md-2 mb-1">
+            <div class="card text-white border border-0" style="background-color:rgb(30, 36, 87);">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ incidentes_fechados }}</p>
+                    <p class="card-text">Incidentes Fechados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br> <!-- Espaçamento -->
+        <hr>
+    <br> <!-- Espaçamento -->
+
+    <!-- Layout da Tabela e Criticidade -->
+    <div class="row">
+        <!-- Tabela Geral de Incidentes (Ocupa 8 colunas) -->
+        <div class="col-md-8">
+            <h5 style="color: rgb(75, 75, 75);">Tabela Geral de Incidentes</h5>
+            <table class="table table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Incidente</th>
+                        <th>SX</th>
+                        <th>Criticidade</th>
+                        <th>Status</th>
+                        <th>Criado em</th>
+                        <th>Minutos</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size: 14px;">
+                    {% for ticket in tickets %}
+                        <tr>
+                            <td>{{ ticket.codigo_incidente }}</td>
+                            <td>{{ ticket.codigo_sx }}</td>
+                            <td>{{ ticket.criticidade }}</td>
+                            <td>{{ ticket.status }}</td>
+                            <td>{{ ticket.criado_em | date:"d/m/Y"}}</td>
+                            <td>{{ ticket.tempo_corrente }} min.</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Nenhum ticket encontrado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Criticidade (Ocupa 4 colunas) -->
+        <div class="col-md-4">
+            <h5 style="color: rgb(75, 75, 75);">Criticidade</h5>
+            <!-- Card para Incidentes Hiper Críticos -->
+            <div class="card text-white border border-0 mb-3" style="background-color: #db1f48;">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ inc_hiper_criticos }}</p>
+                    <p class="card-text">Hiper Críticos</p>
+                </div>
+            </div>
+
+            <!-- Card para Incidentes Muito Críticos -->
+            <div class="card text-gray border border-0 mb-3" style="background-color: #f5bf42;">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ inc_muito_criticos }}</p>
+                    <p class="card-text">Muito Críticos</p>
+                </div>
+            </div>
+
+            <!-- Card para Incidentes Críticos -->
+            <div class="card text-white border border-0 mb-3" style="background-color: #59981A;">
+                <div class="card-body">
+                    <p class="card-text display-4">{{ inc_criticos }}</p>
+                    <p class="card-text">Críticos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>{% if form.instance.pk %}Atualizar Incidente{% else %}Novo{% endif %} Incidente</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Campos para Novo Incidente -->
+        {% if not form.instance.pk %}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.codigo_incidente|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+                {{ form.recurso|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.problema_apresentado|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+                {{ form.responsavel|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                {{ form.criticidade|as_crispy_field }}
+            </div>
+            <div class="col-md-4">
+                {{ form.status|as_crispy_field }}
+            </div>
+            <div class="col-md-4">
+                {{ form.grupo_suporte|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.link_alerta|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+                {{ form.link_itsm|as_crispy_field }}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Campos para Editar Incidente -->
+        {% if form.instance.pk %}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.codigo_sx|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+                {{ form.acoes|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.solucao_contorno|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+                {{ form.causa_raiz|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                {{ form.status|as_crispy_field }}
+            </div>
+            <div class="col-md-4">
+                {{ form.grupo_suporte|as_crispy_field }}
+            </div>
+            <div class="col-md-4">
+                {{ form.analista|as_crispy_field }}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Campos de Upload de Imagens e Arquivos (comuns a ambos) -->
+        <div class="form-group">
+            <label for="images">Upload de Imagens</label>
+            <input type="file" name="images" id="images" class="form-control" multiple>
+        </div>
+
+        <div> <br> </b></div>
+
+        <div class="form-group">
+            <label for="files">Upload de Arquivos</label>
+            <input type="file" name="files" id="files" class="form-control" multiple>
+        </div>
+
+        <div><br></div>
+
+        <!-- Botões de Interação. -->
+        <button type="submit" class="btn btn-success">Salvar</button>
+        <a href="{% url 'ticket_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<div>
+    <br><br>
+</div>
+{% endblock %}

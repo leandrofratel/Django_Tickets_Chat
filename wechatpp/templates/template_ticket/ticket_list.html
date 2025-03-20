@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Lista de Incidentes</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Incidente</th>
+                    <th>SX</th>
+                    <th>Problema</th>
+                    <th>Criticidade</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Minutos</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody style="font-size: 14px; white-space: nowrap;">
+                {% for ticket in tickets %}
+                    <tr>
+                        <td class="text-nowrap">{{ ticket.codigo_incidente }}</td>
+                        <td class="text-nowrap">{{ ticket.codigo_sx }}</td>
+                        <td class="text-nowrap">{{ ticket.problema_apresentado | truncatechars:35 }}</td>
+                        <td class="text-nowrap">{{ ticket.criticidade }}</td>
+                        <td class="text-nowrap">
+                            <span class="badge text-white"
+                            style="
+                                {% if ticket.status == 'Fechado' or ticket.status == 'Resolvido' %}
+                                    background-color: #4b8d09;
+                                {% elif ticket.status == 'Sala de Crise' or ticket.status == 'Em Análise' %}
+                                    background-color: #db1f48;
+                                {% elif ticket.status == 'Aberto' or ticket.status == 'Em Andamento' or ticket.status == 'Designado' %}
+                                    background-color: #f5bf42;
+                                {% else %}
+                                    background-color: #6C757D;
+                                {% endif %}
+                            ">
+                                {{ ticket.status }}
+                            </span>
+                        </td>
+                        <td class="text-nowrap">{{ ticket.criado_em | date:"d/m/y H:i:s"}}</td>
+                        <td class="text-nowrap">
+                            <span id="tempo-decorrido-{{ ticket.id }}">{{ ticket.tempo_corrente | intcomma }} min.</span>
+                        </td>
+                        <td class="text-nowrap">
+                            <!-- Botão de Editar Incidente -->
+                            <a href="{% url 'ticket_update' ticket.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+
+                            <!-- Botão de Excluir Incidente -->
+                            <a href="{% url 'ticket_delete' ticket.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash3-fill"></i>
+                            </a>
+
+                            <!-- Botão de Visualizar Incidente -->
+                            <a href="{% url 'ticket_detail' ticket.pk %}" class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">Nenhum ticket encontrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Garante que o texto não quebre nas células */
+    td {
+        white-space: nowrap;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function atualizarTempoDecorrido(ticketId) {
+        console.log(`Atualizando tempo para o ticket ${ticketId}...`);
+        fetch(`/tickets/tempo_decorrido/${ticketId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(`Dados recebidos para o ticket ${ticketId}:`, data);
+                if (data.tempo_decorrido !== undefined) {
+                    let elemento = document.getElementById(`tempo-decorrido-${ticketId}`);
+                    if (elemento) {
+                        elemento.innerText = `${data.tempo_decorrido} min.`; // Atualiza apenas o tempo
+                    } else {
+                        console.error(`Elemento não encontrado para o ticket ${ticketId}`);
+                    }
+                }
+            })
+            .catch(error => console.error(`Erro ao atualizar tempo decorrido do ticket ${ticketId}:`, error));
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM carregado. Iniciando intervalos de atualização...');
+        {% for ticket in tickets %}
+            console.log(`Configurando intervalo para o ticket {{ ticket.id }}`);
+            setInterval(() => atualizarTempoDecorrido({{ ticket.id|safe }}), 60000); // Atualiza a cada 60 segundos
+        {% endfor %}
+    });
+</script>
+{% endblock %}
