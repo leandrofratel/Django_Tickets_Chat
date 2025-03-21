@@ -34,15 +34,11 @@ class Message(models.Model):
         created_on (datetime): Data e hora em que a mensagem foi criada.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(blank=True, null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='messages/', blank=True, null=True)  # Novo campo de imagem
+
 
     def __str__(self):
-        """
-        Retorna uma representação em string da mensagem.
-
-        Returns:
-            str: Conteúdo da mensagem.
-        """
-        return "Message is :- "+ self.content
+        return "Message is :- " + (self.content if self.content else "Image")

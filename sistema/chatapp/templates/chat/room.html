@@ -4,37 +4,60 @@
 {% if user.is_authenticated %}
 
 <div class="container mt-3">
-    <h2 class="text-dark">{{ room_name }}</h2>
-    <a href="{% url 'rooms' %}">
-        <button type="button" class="btn btn-outline-dark">Voltar</button>
-    </a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-dark mb-0">{{ room_name }}</h2>
+        <a href="{% url 'rooms' %}" class="text-decoration-none">
+            <button type="button" class="btn btn-outline-dark">Voltar</button>
+        </a>
+    </div>
 
-    <div class="card shadow-lg mt-3">
+    <div class="card shadow-lg">
         <!-- Área de mensagens -->
-        <div class="card-body" id="chatbox" style="max-height: 400px; overflow-y: auto; background-color: #f8f9fa; border-radius: 10px;">
+        <div class="card-body" id="chatbox" style="height: 65vh; overflow-y: auto; background-color: #f8f9fa; border-radius: 10px;">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="d-flex {% if message.user == request.user %} justify-content-end {% else %} justify-content-start {% endif %} mb-2">
-                        <div class="p-2 rounded text-white {% if message.user == request.user %} bg-primary {% else %} bg-secondary {% endif %}" style="max-width: 70%;">
-                            <strong>{{ message.user.username }}</strong><br>
-                            {{ message.content }}
-                            <small class="text-muted"> - {{ message.created_on|date:"d/m H:i" }}</small>
+                    <div class="d-flex {% if message.user == request.user %} justify-content-end {% else %} justify-content-start {% endif %} mb-3">
+                        <div class="p-3 rounded {% if message.user == request.user %} bg-primary text-white {% else %} bg-light border {% endif %}" style="max-width: 70%; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong>{{ message.user.username }}</strong>
+                                <small class="{% if message.user == request.user %}text-white-50{% else %}text-muted{% endif %}">{{ message.created_on|date:"d/m H:i" }}</small>
+                            </div>
+                            {% if message.content %}
+                                <div class="message-content">{{ message.content }}</div>
+                            {% endif %}
+                            {% if message.image %}
+                                <div class="mt-2">
+                                    <img src="{{ message.image }}" class="img-fluid rounded" style="max-width: 100%;">
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <p class="text-muted text-center">Nenhuma mensagem ainda.</p>
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <p class="text-muted">Nenhuma mensagem ainda. Seja o primeiro a enviar!</p>
+                </div>
             {% endif %}
         </div>
 
         <!-- Formulário de envio de mensagens -->
-        <div class="card-footer bg-white">
-            <form class="d-flex">
-                <input class="form-control me-2" placeholder="Digite sua mensagem..." id="my_input" type="text" required>
-                <button type="button" id="submit_button" class="btn btn-primary">
-                    <i class="fas fa-paper-plane"></i> Enviar
-                </button>
+        <div class="card-footer bg-white p-3">
+            <form class="d-flex gap-2">
+                <div class="input-group">
+                    <input class="form-control" placeholder="Digite sua mensagem..." id="my_input" type="text" aria-label="Mensagem">
+                    <button type="button" id="attachment_button" class="btn btn-outline-secondary" aria-label="Anexar imagem">
+                        <i class="bi bi-paperclip"></i>
+                    </button>
+                    <button type="button" id="submit_button" class="btn btn-primary" aria-label="Enviar mensagem">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </div>
+                <!-- Input de arquivo para imagens -->
+                <input type="file" id="image_input" style="display: none;" accept="image/*">
             </form>
+            <div id="typing_indicator" class="text-muted small mt-1" style="height: 20px; display: none;">
+                Alguém está digitando...
+            </div>
         </div>
     </div>
 </div>
@@ -46,72 +69,298 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatbox = document.querySelector("#chatbox");
     const inputField = document.querySelector("#my_input");
     const sendButton = document.querySelector("#submit_button");
+    const attachmentButton = document.querySelector("#attachment_button");
+    const imageInput = document.querySelector("#image_input");
+    const typingIndicator = document.querySelector("#typing_indicator");
     const roomName = JSON.parse(document.getElementById('room_slug').textContent);
-    const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/" + roomName + "/");
+    
+    let chatSocket = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+    let typingTimeout = null;
+    
+    // Função para conectar ao WebSocket
+    function connectWebSocket() {
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        chatSocket = new WebSocket(wsProtocol + window.location.host + "/ws/" + roomName + "/");
+        
+        // Quando o WebSocket se conectar
+        chatSocket.onopen = function () {
+            console.log("Conexão estabelecida!");
+            reconnectAttempts = 0;
+        };
 
+        // Quando o WebSocket se desconectar
+        chatSocket.onclose = function (e) {
+            console.log("Conexão fechada. Código:", e.code);
+            
+            // Tentar reconectar se não foi um fechamento limpo
+            if (e.code !== 1000 && reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++;
+                const timeout = Math.min(1000 * reconnectAttempts, 5000);
+                console.log(`Tentando reconectar em ${timeout/1000} segundos...`);
+                setTimeout(connectWebSocket, timeout);
+            }
+        };
+        
+        // Quando uma nova mensagem (ou imagem) for recebida
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            
+            // Se for uma notificação de digitação
+            if (data.typing) {
+                if (data.username !== "{{ request.user.username }}") {
+                    typingIndicator.textContent = `${data.username} está digitando...`;
+                    typingIndicator.style.display = "block";
+                    
+                    // Esconder o indicador após 3 segundos
+                    clearTimeout(typingTimeout);
+                    typingTimeout = setTimeout(() => {
+                        typingIndicator.style.display = "none";
+                    }, 3000);
+                }
+                return;
+            }
+            
+            // Criar elemento de mensagem
+            const div = document.createElement("div");
+            div.classList.add("d-flex", "mb-3");
+            
+            if (data.username === "{{ request.user.username }}") {
+                div.classList.add("justify-content-end");
+            } else {
+                div.classList.add("justify-content-start");
+            }
+
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("p-3", "rounded");
+            messageDiv.style.maxWidth = "70%";
+            messageDiv.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
+            
+            if (data.username === "{{ request.user.username }}") {
+                messageDiv.classList.add("bg-primary", "text-white");
+            } else {
+                messageDiv.classList.add("bg-light", "border");
+            }
+
+            // Cabeçalho da mensagem com nome e hora
+            const header = document.createElement("div");
+            header.classList.add("d-flex", "justify-content-between", "align-items-center", "mb-1");
+            
+            const username = document.createElement("strong");
+            username.textContent = data.username;
+            
+            const time = document.createElement("small");
+            if (data.username === "{{ request.user.username }}") {
+                time.classList.add("text-white-50");
+            } else {
+                time.classList.add("text-muted");
+            }
+            
+            const now = new Date();
+            time.textContent = now.toLocaleString('pt-BR', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            header.appendChild(username);
+            header.appendChild(time);
+            messageDiv.appendChild(header);
+
+            // Conteúdo da mensagem
+            if (data.message) {
+                const content = document.createElement("div");
+                content.classList.add("message-content");
+                content.textContent = data.message;
+                messageDiv.appendChild(content);
+            }
+            
+            // Se for uma imagem
+            if (data.image) {
+                const imgContainer = document.createElement("div");
+                imgContainer.classList.add("mt-2");
+                
+                const img = document.createElement("img");
+                img.src = data.image;
+                img.classList.add("img-fluid", "rounded");
+                img.style.maxWidth = "100%";
+                
+                // Garantir que a imagem seja carregada antes de adicionar ao DOM
+                img.onload = function() {
+                    // A imagem foi carregada com sucesso
+                    console.log("Imagem carregada com sucesso");
+                };
+                
+                img.onerror = function() {
+                    console.error("Erro ao carregar a imagem");
+                };
+                
+                imgContainer.appendChild(img);
+                messageDiv.appendChild(imgContainer);
+            }
+
+            div.appendChild(messageDiv);
+            chatbox.appendChild(div);
+            scrollToBottom();
+            
+            // Esconder o indicador de digitação quando uma mensagem é recebida
+            typingIndicator.style.display = "none";
+        };
+    }
+    
+    // Iniciar conexão WebSocket
+    connectWebSocket();
+
+    // Função para rolar para o fundo do chat
     function scrollToBottom() {
         chatbox.scrollTop = chatbox.scrollHeight;
     }
 
+    // Inicializa a rolagem para a parte inferior
     scrollToBottom();
 
-    chatSocket.onopen = function () {
-        console.log("Conexão estabelecida!");
-    };
-
-    chatSocket.onclose = function () {
-        console.log("Conexão fechada inesperadamente!");
-    };
-
+    // Função para enviar uma mensagem de texto
     function sendMessage() {
         const messageInput = inputField.value.trim();
 
-        if (messageInput.length > 0) {
+        if (messageInput.length > 0 && chatSocket && chatSocket.readyState === WebSocket.OPEN) {
             chatSocket.send(JSON.stringify({
                 message: messageInput,
                 username: "{{ request.user.username }}",
                 room_name: "{{ room_name }}"
             }));
             inputField.value = "";
+            
+            // Foco de volta no campo de entrada
+            inputField.focus();
         }
     }
 
+    // Função para enviar uma imagem
+    function sendImage(imageFile) {
+        if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
+            alert("Não foi possível enviar a imagem. Conexão não estabelecida.");
+            return;
+        }
+        
+        // Verificar tamanho do arquivo (limitar a 5MB)
+        if (imageFile.size > 5 * 1024 * 1024) {
+            alert("A imagem é muito grande. O tamanho máximo é 5MB.");
+            return;
+        }
+        
+        // Mostrar indicador de carregamento
+        const loadingDiv = document.createElement("div");
+        loadingDiv.classList.add("d-flex", "justify-content-end", "mb-3");
+        
+        const loadingMsg = document.createElement("div");
+        loadingMsg.classList.add("p-2", "rounded", "bg-secondary", "text-white");
+        loadingMsg.textContent = "Enviando imagem...";
+        
+        loadingDiv.appendChild(loadingMsg);
+        chatbox.appendChild(loadingDiv);
+        scrollToBottom();
+        
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const imageData = e.target.result;
+
+            // Remover indicador de carregamento
+            chatbox.removeChild(loadingDiv);
+
+            // Enviar a imagem via WebSocket
+            chatSocket.send(JSON.stringify({
+                image: imageData,
+                username: "{{ request.user.username }}",
+                room_name: "{{ room_name }}"
+            }));
+        };
+        
+        reader.onerror = function() {
+            // Remover indicador de carregamento
+            chatbox.removeChild(loadingDiv);
+            alert("Erro ao processar a imagem. Tente novamente.");
+        };
+        
+        // Ler a imagem como Data URL (Base64)
+        reader.readAsDataURL(imageFile);
+    }
+    
+    // Função para enviar notificação de digitação
+    function sendTypingNotification() {
+        if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.send(JSON.stringify({
+                typing: true,
+                username: "{{ request.user.username }}",
+                room_name: "{{ room_name }}"
+            }));
+        }
+    }
+
+    // Enviar mensagem ao pressionar Enter
     inputField.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
             e.preventDefault();
             sendMessage();
+        } else {
+            // Enviar notificação de digitação (limitado a uma vez a cada 2 segundos)
+            if (!typingTimeout) {
+                sendTypingNotification();
+                typingTimeout = setTimeout(() => {
+                    typingTimeout = null;
+                }, 2000);
+            }
         }
     });
 
+    // Enviar mensagem ao clicar no botão de envio
     sendButton.addEventListener("click", sendMessage);
 
-    chatSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>${data.username}</strong>: ${data.message}`;
-        
-        div.classList.add("p-2", "rounded", "text-white", "mb-2");
-        if (data.username === "{{ request.user.username }}") {
-            div.classList.add("bg-primary", "text-end", "align-self-end");
-        } else {
-            div.classList.add("bg-secondary", "text-start", "align-self-start");
-        }
+    // Quando um arquivo for selecionado, envia a imagem
+    attachmentButton.addEventListener("click", function () {
+        imageInput.click();
+    });
 
-        chatbox.appendChild(div);
-        scrollToBottom();
-    };
+    // Quando a imagem for selecionada, envia a imagem
+    imageInput.addEventListener("change", function () {
+        const file = imageInput.files[0];
+        if (file) {
+            sendImage(file);
+            imageInput.value = ""; // Limpa o input de arquivo
+        }
+    });
+    
+    // Ajustar altura do chatbox em dispositivos móveis
+    function adjustChatboxHeight() {
+        if (window.innerWidth < 768) {
+            chatbox.style.height = "50vh";
+        } else {
+            chatbox.style.height = "65vh";
+        }
+    }
+    
+    // Ajustar altura inicial e quando a janela for redimensionada
+    adjustChatboxHeight();
+    window.addEventListener("resize", adjustChatboxHeight);
 });
 </script>
 
 {% else %}
 <!-- Mensagem para usuários não logados -->
-<div class="container mt-3">
-    <div class="alert alert-info text-center">
-        <h5 class="mb-0">Você não está logado</h5>
-        <a href="{% url 'login' %}" class="btn btn-outline-dark mt-2">Log In</a>
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-body text-center p-5">
+            <h4 class="mb-3">Você precisa estar logado para acessar o chat</h4>
+            <p class="text-muted mb-4">Faça login para continuar a conversa</p>
+            <a href="{% url 'login' %}" class="btn btn-primary px-4 py-2">Entrar</a>
+        </div>
     </div>
 </div>
 {% endif %}
 
 <br/>
 {% endblock %}
+

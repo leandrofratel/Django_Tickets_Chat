@@ -2,7 +2,7 @@ from .forms import PerfilForm
 from django.http import JsonResponse
 from django.contrib import messages
 from .forms import TicketForm, TicketUpdateForm
-from .models import Ticket, TicketImage, TicketFile
+from .models import Ticket, TicketImage
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -49,8 +49,9 @@ def ticket_create(request): #? Cria um novo Incidente
                 TicketImage.objects.create(ticket=ticket, image=file)
 
             #* Processa os arquivos
-            for file in request.FILES.getlist('files'):
-                TicketFile.objects.create(ticket=ticket, file=file)
+            #! Obsoleto
+            # for file in request.FILES.getlist('files'):
+            #     TicketFile.objects.create(ticket=ticket, file=file)
 
             return redirect('ticket_list')
     else:
@@ -112,7 +113,7 @@ def ticket_detail(request, pk): #? Permite visualizar detalhes do incidente
     return render(request, 'tickets/ticket_detail.html', {'ticket': ticket})
 
 @login_required
-def ticket_gestao_problemas(request): #TODO: Criar tela para Gestão de Problemas
+def ticket_gestao_problemas(request):
     """
     Gestão de Problemas
     """

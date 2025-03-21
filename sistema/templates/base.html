@@ -4,71 +4,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Gestão de Incidentes">
     <title>{% block title %}Gestão de Incidentes{% endblock %}</title>
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/x-ico" href="{% static 'images/favicon.ico' %}"> 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    <style>
+        :root {
+            --sidebar-width: 270px;
+            --primary-color: #212529;
+            --accent-color: #0d6efd;
+            --hover-bg: #2c3136;
+        }
+        
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #f8f9fa;
+        }
+        
+        #wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+        }
+        
+        #sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 999;
+            background: var(--primary-color);
+            color: #fff;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        #sidebar ul li a {
+            padding: 12px 20px;
+            display: block;
+            color: #fff;
+            border-radius: 5px;
+            margin: 4px 10px;
+            transition: all 0.3s;
+        }
+        
+        #sidebar ul li a:hover {
+            background: var(--hover-bg);
+            text-decoration: none;
+        }
+        
+        #sidebar ul li a.active {
+            background: var(--accent-color);
+            color: #fff;
+        }
+        
+        #sidebar ul li a i {
+            margin-right: 10px;
+        }
+        
+        #sidebar .divider {
+            height: 1px;
+            margin: 10px 15px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        #page-content-wrapper {
+            width: calc(100% - var(--sidebar-width));
+            padding: 20px;
+            margin-left: var(--sidebar-width);
+            transition: all 0.3s;
+        }
+        
+        #sidebarCollapse {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: calc(var(--sidebar-width) * -1);
+            }
+            
+            #sidebar.active {
+                margin-left: 0;
+            }
+            
+            #page-content-wrapper {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            #sidebarCollapse {
+                display: block;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1000;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <div class="d-flex" id="wrapper" style="margin-right: 100px;">
+    <!-- Mobile sidebar toggle button -->
+    <button type="button" id="sidebarCollapse" class="btn btn-primary">
+        <i class="bi bi-list"></i>
+    </button>
 
-        <!-- Menu Lateral -->
-        <div class="bg-dark text-white" id="sidebar" style="width: 270px; height: 100vh;">
-            <div class="p-3">
-                <h4>Menu</h4>
-                <ul class="nav flex-column">
-
-                    <!-- Itens do Menu -->
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'perfil' %}">
-                            <i class="bi bi-person"> <span class="ms-2">Perfil</span> </i>
-                        </a>
-                        <a class="nav-link text-white" href="{% url 'ticket_dashboard' %}">
-                            <i class="bi bi-bar-chart"> <span class="ms-2">Dashboard</span> </i>
-                        </a>
-
-                        <!--Linha vertical-->
-                        <a><hr></a>
-                        
-                        <a class="nav-link text-white" href="{% url 'ticket_create' %}">
-                            <i class="bi bi-pencil"> <span class="ms-2">Cadastrar Incidente</span> </i>
-                        </a>
-                        <a class="nav-link text-white" href="{% url 'ticket_list' %}">
-                            <i class="bi bi-list-ul"> <span class="ms-2">Todos os Incidentes</span> </i>
-                        </a>
-                        <a class="nav-link text-white" href="{% url 'ticket_archive' %}">
-                            <i class="bi bi-archive"> <span class="ms-2">Incidentes Arquivados</span> </i>
-                        </a>
-
-                        <!--Linha vertical-->
-                        <a><hr></a>
-
-                        <a class="nav-link text-white" href="{% url 'ticket_gestao_problemas' %}">
-                            <i class="bi bi-exclamation-triangle"> <span class="ms-2">Gestão de Problemas</span> </i>
-                        </a>
-                        <a class="nav-link text-white" href="{% url 'rooms' %}">
-                            <i class="bi bi-chat-right-dots"> <span class="ms-2">Chat</span> </i>
-                        </a>
-                    </li>
-                </ul>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-dark" id="sidebar">
+            <div class="sidebar-header d-flex align-items-center">
+                <img src="{% static 'images/favicon.ico' %}" alt="Logo" height="40" class="me-2">
+                <h4 class="m-0">Gestão de Incidentes</h4>
             </div>
+            
+            <ul class="nav flex-column mt-3">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/perfil/' %}active{% endif %}" href="{% url 'perfil' %}">
+                        <i class="bi bi-person"></i>
+                        <span>Perfil</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" href="{% url 'ticket_dashboard' %}">
+                        <i class="bi bi-bar-chart"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                
+                <div class="divider"></div>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/ticket/create/' %}active{% endif %}" href="{% url 'ticket_create' %}">
+                        <i class="bi bi-pencil"></i>
+                        <span>Cadastrar Incidente</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/ticket/list/' %}active{% endif %}" href="{% url 'ticket_list' %}">
+                        <i class="bi bi-list-ul"></i>
+                        <span>Todos os Incidentes</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/ticket/archive/' %}active{% endif %}" href="{% url 'ticket_archive' %}">
+                        <i class="bi bi-archive"></i>
+                        <span>Incidentes Arquivados</span>
+                    </a>
+                </li>
+                
+                <div class="divider"></div>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/ticket/gestao-problemas/' %}active{% endif %}" href="{% url 'ticket_gestao_problemas' %}">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>Gestão de Problemas</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/chat/rooms/' %}active{% endif %}" href="{% url 'rooms' %}">
+                        <i class="bi bi-chat-right-dots"></i>
+                        <span>Chat</span>
+                    </a>
+                </li>
+            </ul>
         </div>
 
-        <!-- Conteúdo Principal -->
-        <div id="page-content-wrapper" class="w-100">
-            <div class="container">
-                {% block content %}
-                <!-- O conteúdo específico de cada página será inserido aqui -->
-                {% endblock %}
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid py-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        {% block content %}
+                        <!-- O conteúdo específico de cada página será inserido aqui -->
+                        {% endblock %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS e dependências -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle sidebar on mobile
+            const sidebarCollapse = document.getElementById('sidebarCollapse');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (sidebarCollapse) {
+                sidebarCollapse.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnToggleButton = sidebarCollapse.contains(event.target);
+                
+                if (window.innerWidth <= 768 && !isClickInsideSidebar && !isClickOnToggleButton && sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+    </script>
+    
     {% block extra_js %}
     <!-- Scripts específicos de cada página serão inseridos aqui -->
     {% endblock %}

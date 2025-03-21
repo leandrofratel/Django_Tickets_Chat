@@ -42,9 +42,6 @@ class Ticket(models.Model):
     solucao_contorno = models.TextField(verbose_name="Solução de Contorno")
     causa_raiz = models.TextField(verbose_name="Causa Raiz")
 
-    # Campo de previsão
-    previsao = models.IntegerField(null=True, blank=True)
-
     # Links
     link_alerta = models.URLField(verbose_name="Alerta Dynatrace", blank=True, null=True)
     link_itsm = models.URLField(verbose_name="Link do Incidente ITSM", blank=True, null=True)
@@ -78,6 +75,7 @@ class Ticket(models.Model):
     criado_em = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
     atualizado_em = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
     fechado_em = models.DateTimeField(null=True, blank=True)
+    previsao = models.IntegerField(null=True, blank=True, verbose_name="Previsão em minutos")
 
     def tempo_corrente(self):
         """
@@ -110,10 +108,10 @@ class TicketImage(models.Model):
     def __str__(self):
         return f"Imagem do Ticket {self.ticket.codigo_incidente}"
 
-#TODO: Realizar correção desta função!!!
-class TicketFile(models.Model):
-    ticket = models.ForeignKey(Ticket, related_name='files', on_delete=models.CASCADE)
-    file = models.FileField(upload_to='tickets/files/')
+#! Campo de `Upload de Arquivos` desativado
+# class TicketFile(models.Model):
+#     ticket = models.ForeignKey(Ticket, related_name='files', on_delete=models.CASCADE)
+#     file = models.FileField(upload_to='tickets/files/')
 
-    def __str__(self):
-        return f"Arquivos do Ticket {self.ticket.codigo_incidente}"
+#     def __str__(self):
+#         return f"Arquivos do Ticket {self.ticket.codigo_incidente}"

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Ticket, TicketImage, TicketFile
+from .models import Ticket, TicketImage
 from django.contrib.auth.forms import UserCreationForm
 
 class TicketForm(forms.ModelForm):
@@ -35,10 +35,11 @@ class TicketImageForm(forms.ModelForm):
         model = TicketImage
         fields = ['image']
 
-class TicketFileForm(forms.ModelForm):
-    class Meta:
-        model = TicketFile
-        fields = ['file']
+#! Obsoleto
+# class TicketFileForm(forms.ModelForm):
+#     class Meta:
+#         model = TicketFile
+#         fields = ['file']
 
 class RegistroForm(UserCreationForm):
     email = forms.EmailField(required=True)

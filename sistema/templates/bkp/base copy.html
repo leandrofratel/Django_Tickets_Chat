@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestão de Incidentes{% endblock %}</title>
+    <link rel="icon" type="image/x-ico" href="{% static 'images/favicon.ico' %}"> 
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="d-flex" id="wrapper" style="margin-right: 100px;">
+
+        <!-- Menu Lateral -->
+        <div class="bg-dark text-white" id="sidebar" style="width: 270px; height: 100vh;">
+            <div class="p-3">
+                <h4>Menu</h4>
+                <ul class="nav flex-column">
+
+                    <!-- Itens do Menu -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'perfil' %}">
+                            <i class="bi bi-person"> <span class="ms-2">Perfil</span> </i>
+                        </a>
+                        <a class="nav-link text-white" href="{% url 'ticket_dashboard' %}">
+                            <i class="bi bi-bar-chart"> <span class="ms-2">Dashboard</span> </i>
+                        </a>
+
+                        <!--Linha vertical-->
+                        <a><hr></a>
+                        
+                        <a class="nav-link text-white" href="{% url 'ticket_create' %}">
+                            <i class="bi bi-pencil"> <span class="ms-2">Cadastrar Incidente</span> </i>
+                        </a>
+                        <a class="nav-link text-white" href="{% url 'ticket_list' %}">
+                            <i class="bi bi-list-ul"> <span class="ms-2">Todos os Incidentes</span> </i>
+                        </a>
+                        <a class="nav-link text-white" href="{% url 'ticket_archive' %}">
+                            <i class="bi bi-archive"> <span class="ms-2">Incidentes Arquivados</span> </i>
+                        </a>
+
+                        <!--Linha vertical-->
+                        <a><hr></a>
+
+                        <a class="nav-link text-white" href="{% url 'ticket_gestao_problemas' %}">
+                            <i class="bi bi-exclamation-triangle"> <span class="ms-2">Gestão de Problemas</span> </i>
+                        </a>
+                        <a class="nav-link text-white" href="{% url 'rooms' %}">
+                            <i class="bi bi-chat-right-dots"> <span class="ms-2">Chat</span> </i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div id="page-content-wrapper" class="w-100">
+            <div class="container">
+                {% block content %}
+                <!-- O conteúdo específico de cada página será inserido aqui -->
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS e dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block extra_js %}
+    <!-- Scripts específicos de cada página serão inseridos aqui -->
+    {% endblock %}
+</body>
+</html>
