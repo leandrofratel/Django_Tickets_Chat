@@ -3,55 +3,96 @@
 {% load humanize %}
 
 <div class="container mt-3">
-    <h2>Detalhes do Incidente</h2>
-    <div class="card">
+    <h2 class="mb-4">Detalhes do Incidente</h2>
+    <div class="card shadow">
         <div class="card-body">
-            <h5 class="card-title text-primary">Número do Incidente: {{ ticket.codigo_incidente }}</h5>
-            <h5 class="card-title text-primary">Código do SX: {{ ticket.codigo_sx }}</h5>
-            <h5 class="card-title text-primary">
-                Tempo decorrido: <span id="tempo-decorrido-{{ ticket.id }}">{{ ticket.tempo_corrente|intcomma }} min. </span>
-            </h5>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Recurso:</strong> {{ ticket.recurso }}</li>
-                        <li class="list-group-item"><strong>Problema Apresentado:</strong> {{ ticket.problema_apresentado }}</li>
-                        <li class="list-group-item"><strong>Previsão de Retorno:</strong> {{ ticket.previsao }}</li>
-                        <li class="list-group-item"><strong>Ações:</strong> {{ ticket.acoes }}</li>
-                        <li class="list-group-item"><strong>Causa Raiz:</strong> {{ ticket.causa_raiz }}</li>
-                        <li class="list-group-item"><strong>Solução:</strong> {{ ticket.solucao_contorno }}</li>
-                    </ul>
+            <!-- Destaque para as informações principais -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <h5 class="card-title text-primary"><i class="fas fa-ticket-alt"></i> Nº: {{ ticket.codigo_incidente }}</h5>
                 </div>
+                <div class="col-md-4">
+                    <h5 class="card-title text-primary"><i class="fas fa-code"></i> Cod: {{ ticket.codigo_sx }}</h5>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="card-title text-primary">
+                        <i class="fas fa-clock"></i> Tempo decorrido: <span id="tempo-decorrido-{{ ticket.id }}">{{ ticket.tempo_corrente|intcomma }} min.</span>
+                    </h5>
+                </div>
+            </div>
+
+            <!-- Organização dos campos em duas colunas -->
+            <div class="row">
+                <!-- Coluna 1 -->
                 <div class="col-md-6">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Alerta Dynatrace:</strong> 
-                            <a href="{{ ticket.link_alerta }}" target="_blank">{{ ticket.link_alerta }}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Link do Incidente ITSM:</strong> 
-                            <a href="{{ ticket.link_itsm }}" target="_blank">{{ ticket.link_itsm }}</a>
-                        </li>
-                        <li class="list-group-item"><strong>Grupo de Suporte:</strong> {{ ticket.grupo_suporte }}</li>
-                        <li class="list-group-item"><strong>Analista:</strong> {{ ticket.analista }}</li>
-                        <li class="list-group-item"><strong>Status:</strong> {{ ticket.get_status_display }}</li>
-                        <li class="list-group-item"><strong>Data Abertura:</strong> {{ ticket.criado_em | date:"d/m/y H:i:s"}}</li>
-                        <li class="list-group-item"><strong>Data Fechamento:</strong> {{ ticket.fechado_em | date:"d/m/y H:i:s"}}</li>
-                    </ul>
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Status e Detalhes</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Recurso:</strong> {{ ticket.recurso }}</li>
+                            <li class="list-group-item"><strong>Criticidade:</strong> {{ ticket.criticidade }}</li>
+                            <li class="list-group-item"><strong>Status:</strong> {{ ticket.get_status_display }}</li>
+                            <li class="list-group-item"><strong>Data Abertura:</strong> {{ ticket.criado_em | date:"d/m/y H:i:s" }}</li>
+                            <li class="list-group-item"><strong>Data Fechamento:</strong> {{ ticket.fechado_em | date:"d/m/y H:i:s" }}</li>
+                            <li class="list-group-item"><strong>Previsão de Retorno:</strong> {{ ticket.previsao }}</li>
+                            <li class="list-group-item"><strong>Problema Apresentado:</strong> {{ ticket.problema_apresentado }}</li>
+                        </ul>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Ações</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Ações:</strong> {{ ticket.acoes }}</li>
+                            <li class="list-group-item"><strong>Causa Raiz:</strong> {{ ticket.causa_raiz }}</li>
+                            <li class="list-group-item"><strong>Solução Adotada:</strong> {{ ticket.solucao_contorno }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Coluna 2 -->
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Links de Acesso</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Dynatrace:</strong>
+                                <a href="{{ ticket.link_alerta }}" target="_blank" class="text-primary">{{ ticket.link_alerta | truncatechars:50}}</a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Incidente ITSM:</strong>
+                                <a href="{{ ticket.link_itsm }}" target="_blank" class="text-primary">{{ ticket.link_itsm | truncatechars:50}}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Responsáveis</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Grupo de Suporte:</strong> {{ ticket.grupo_suporte }}</li>
+                            <li class="list-group-item"><strong>Analista:</strong> {{ ticket.analista }}</li>
+                            <li class="list-group-item"><strong>Responsavel pelo Recurso:</strong> {{ ticket.responsavel }}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
             <!-- Exibição das Imagens -->
             <div class="mt-4">
-                <h5><strong>Imagens:</strong></h5>
+                <h5 class="mb-3"><strong>Imagens:</strong></h5>
                 <div class="row">
                     {% for image in ticket.images.all %}
                         <div class="col-md-4 mb-3">
                             <img src="{{ image.image.url }}" alt="Imagem do Incidente" class="img-fluid rounded shadow-sm">
                         </div>
                     {% empty %}
-                        <p>Nenhuma imagem enviada.</p>
+                        <p class="text-muted">Nenhuma imagem enviada.</p>
                     {% endfor %}
                 </div>
             </div>
@@ -59,15 +100,13 @@
     </div>
 
     <!-- Botões de Interação -->
-    <div class="mt-3">
+    <div class="mt-4">
         <a href="{% url 'ticket_list' %}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Voltar
         </a>
-
         <a href="{% url 'ticket_update' ticket.id %}" class="btn btn-warning {% if ticket.status == 'Fechado' %}disabled{% endif %}">
             <i class="fas fa-edit"></i> Editar Incidente
         </a>
-
     </div>
     <br>
 </div>

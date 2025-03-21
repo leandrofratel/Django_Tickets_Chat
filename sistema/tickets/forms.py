@@ -9,7 +9,7 @@ class TicketForm(forms.ModelForm):
         fields = [
             'codigo_incidente', 'recurso', 'problema_apresentado',
             'link_alerta', 'link_itsm', 'grupo_suporte',
-            'status', 'criticidade', 'responsavel'
+            'status'
         ]
 
         previsao = forms.IntegerField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Previsão em número'}))
@@ -22,7 +22,7 @@ class TicketUpdateForm(forms.ModelForm):
         model = Ticket
         fields = [
             'codigo_sx', 'acoes', 'solucao_contorno', 'causa_raiz',
-            'status', 'grupo_suporte', 'analista','previsao'
+            'status', 'grupo_suporte', 'analista', 'previsao'
         ]
         widgets = {
             'acoes': forms.Textarea(attrs={'rows': 3}),
@@ -34,12 +34,6 @@ class TicketImageForm(forms.ModelForm):
     class Meta:
         model = TicketImage
         fields = ['image']
-
-#! Obsoleto
-# class TicketFileForm(forms.ModelForm):
-#     class Meta:
-#         model = TicketFile
-#         fields = ['file']
 
 class RegistroForm(UserCreationForm):
     email = forms.EmailField(required=True)
