@@ -11,7 +11,7 @@ Este é um sistema de gerenciamento de tickets desenvolvido em Django. Ele permi
 - **Chat em tempo real** para discussão sobre os tickets
 
 ## Tecnologias Utilizadas
-- **Python 3.x**
+- **Python 3
 - **Django** (Back-end)
 - **Django Channels** (WebSockets para chat em tempo real)
 - **Bootstrap** (Front-end)
