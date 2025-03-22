@@ -26,17 +26,17 @@ pip install -r requirements.txt
 ## Configuração e Execução
 1. Clone o repositório:
 ```sh
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/leandrofratel/Django_Tickets_Chat.git
 ```
 2. Navegue até a pasta do projeto:
 ```sh
-cd seu-repositorio
+cd sistema
 ```
 3. Configure o banco de dados:
 ```sh
 python manage.py migrate
 ```
-4. Crie um superusuário (opcional, para acessar o Django Admin):
+4. Crie um superusuário (Para criar as salas de bate-papo):
 ```sh
 python manage.py createsuperuser
 ```
@@ -51,26 +51,9 @@ python manage.py runserver
 - **Gerenciamento de Tickets**: Criar, editar e alterar status dos tickets.
 - **Chat em Tempo Real**: Acessar salas de bate-papo vinculadas aos tickets.
 
-## Contribuição
-Se quiser contribuir com melhorias, siga os passos:
-1. Faça um fork do repositório.
-2. Crie uma branch para sua funcionalidade:
-   ```sh
-   git checkout -b minha-feature
-   ```
-3. Faça commit das suas alterações:
-   ```sh
-   git commit -m "Adiciona nova funcionalidade X"
-   ```
-4. Envie suas alterações:
-   ```sh
-   git push origin minha-feature
-   ```
-5. Abra um Pull Request no GitHub.
-
 ## Licença
 Este projeto está sob a licença MIT. Sinta-se livre para usá-lo e modificá-lo conforme necessário.
 
 ---
-Feito com ❤️ por [Seu Nome]
+Desenvolvido por Leandro Fratel.
 
