@@ -12,6 +12,8 @@ class Room(models.Model):
     """
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
+    ticket = models.OneToOneField(Ticket, on_delete=models.CASCADE, related_name='room', null=True, blank=True)
+
 
     def __str__(self):
         """
@@ -20,7 +22,8 @@ class Room(models.Model):
         Returns:
             str: Nome da sala e seu identificador único.
         """
-        return "Room : "+ self.name + " | Id : " + self.slug
+        # return "Room : "+ self.name + " | Id : " + self.slug
+        return self.name
 
 class Message(models.Model):
     """
