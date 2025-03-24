@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Atualizar Incidente</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">{{ form.codigo_sx|as_crispy_field }}</div>
+            <div class="col-md-6">{{ form.previsao|as_crispy_field }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">{{ form.acoes|as_crispy_field }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">{{ form.solucao_contorno|as_crispy_field }}</div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">{{ form.status|as_crispy_field }}</div>
+            <div class="col-md-4">{{ form.grupo_suporte|as_crispy_field }}</div>
+            <div class="col-md-4">{{ form.analista|as_crispy_field }}</div>
+        </div>
+
+        <!-- Campos de Upload de Imagens e Arquivos -->
+        <div class="form-group">
+            <label for="images">Upload de Imagens</label>
+            <input type="file" name="images" id="images" class="form-control" multiple>
+        </div>
+
+        <div> <br> </div>
+        <div><br></div>
+
+        <button type="submit" class="btn btn-success">Salvar</button>
+        <a href="{% url 'ticket_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<div>
+    <br>
+    <br>
+</div>
+{% endblock %}

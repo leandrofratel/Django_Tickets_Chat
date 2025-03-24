@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.timezone import now
+from django.utils.timezone import now, localtime
 
 class Ticket(models.Model):
     STATUS_CHOICES = [
@@ -119,12 +119,12 @@ class Ticket(models.Model):
     codigo_incidente = models.CharField(max_length=50, verbose_name="Incidente")
     codigo_sx = models.CharField(max_length=50, verbose_name="SX", default="", blank=True)
     recurso = models.CharField(max_length=50, verbose_name="Recurso", choices=RECURSOS_CHOICES)
+    problema_apresentado = models.CharField(max_length=50, verbose_name="Problema Apresentado")
 
     # Caixas de Texto
-    problema_apresentado = models.CharField(max_length=50, verbose_name="Problema Apresentado")
-    acoes = models.TextField(verbose_name="Ações") #TODO: REMOVER ESTA LINHA
-    solucao_contorno = models.TextField(verbose_name="Solução de Contorno")
-    causa_raiz = models.TextField(verbose_name="Causa Raiz")
+    # acoes = models.TextField(verbose_name="Histórico de Ações", blank=True) #! Obsoleto
+    historico_acoes = models.TextField(verbose_name="Histórico de Ações", blank=True, editable=False)
+    solucao_contorno = models.TextField(verbose_name="Solução de Contorno", blank=True, null=True, default="")
 
     # Links
     link_alerta = models.URLField(verbose_name="Alerta Dynatrace", blank=True, null=True)
@@ -167,6 +167,15 @@ class Ticket(models.Model):
     fechado_em = models.DateTimeField(null=True, blank=True)
     previsao = models.IntegerField(null=True, blank=True, verbose_name="Previsão em minutos")
 
+    def adicionar_acao(self, texto_acao, usuario):
+        """
+        Grava o conteudo e registra o usuário e data/hora.
+        """
+        data_hora = localtime(now()).strftime("%d/%m/%Y %H:%M:%S")
+        nova_acao = f"\n\n[{data_hora} - {usuario.username}]:\n{texto_acao}"
+        self.historico_acoes = (self.historico_acoes or "") + nova_acao
+        self.save()        
+
     def tempo_corrente(self):
         """
         Retorna o tempo total em aberto em minutos (inteiro).
@@ -178,7 +187,7 @@ class Ticket(models.Model):
     def save(self, *args, **kwargs):
         """ Para a contagem de tempo apenas quando o status for 'Fechado' ou 'Resolvido' """
         if self.status in ['Fechado', 'Resolvido'] and not self.fechado_em:
-            self.fechado_em = now()  # Registra o horário de fechamento
+            self.fechado_em = now()
 
         ## Criticidade com base no recurso selecionado
         if self.recurso in self.RECURSO_CRITICIDADE_MAP:

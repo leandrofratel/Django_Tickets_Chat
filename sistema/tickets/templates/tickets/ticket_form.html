@@ -9,19 +9,22 @@
         
         <!-- Campos para Novo Incidente -->
         {% if not form.instance.pk %}
-        <div class="row">
+        <div class="row mb-3">
+            <!-- Incidente e Problema na mesma linha -->
+            <!-- Problema Apresentado -->
+            <!-- Código Incidente -->
             <div class="col-md-6">
                 {{ form.codigo_incidente|as_crispy_field }}
             </div>
             <div class="col-md-6">
-                {{ form.recurso|as_crispy_field }}
+                {{ form.problema_apresentado|as_crispy_field }}
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                {{ form.problema_apresentado|as_crispy_field }}
-        </div>
-        <div class="row">
+        <div class="row mb-3">
+            <!-- Recurso, Status e Grupo de Suporte na próxima linha -->
+            <div class="col-md-4">
+                {{ form.recurso|as_crispy_field }}
+            </div>
             <div class="col-md-4">
                 {{ form.status|as_crispy_field }}
             </div>
@@ -29,7 +32,8 @@
                 {{ form.grupo_suporte|as_crispy_field }}
             </div>
         </div>
-        <div class="row">
+        <div class="row mb-3">
+            <!-- Link Alerta e Link ITSM na próxima linha -->
             <div class="col-md-6">
                 {{ form.link_alerta|as_crispy_field }}
             </div>
@@ -41,23 +45,23 @@
 
         <!-- Campos para Editar Incidente -->
         {% if form.instance.pk %}
-        <div class="row">
+        <div class="row mb-3">
+            <!-- Código SX e Ações na mesma linha -->
             <div class="col-md-6">
                 {{ form.codigo_sx|as_crispy_field }}
             </div>
-            <div class="col-md-6">
-                {{ form.acoes|as_crispy_field }}
-            </div>
         </div>
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-md-6">
+                {{ form.historico_acoes|as_crispy_field }}
+            </div>
+            <!-- Solução de Contorno e Causa Raiz na próxima linha -->
+            <div>
                 {{ form.solucao_contorno|as_crispy_field }}
             </div>
-            <div class="col-md-6">
-                {{ form.causa_raiz|as_crispy_field }}
-            </div>
         </div>
-        <div class="row">
+        <div class="row mb-3">
+            <!-- Status, Grupo de Suporte e Analista na próxima linha -->
             <div class="col-md-4">
                 {{ form.status|as_crispy_field }}
             </div>
@@ -70,30 +74,31 @@
         </div>
         {% endif %}
 
-        <!-- Campos de Upload de Imagens e Arquivos (comuns a ambos) -->
-        <div class="form-group">
-            <label for="images">Upload de Imagens</label>
-            <input type="file" name="images" id="images" class="form-control" multiple>
-        </div>
-        <div>
-            <br>
-            <!--Separador-->
-            <br>
+        <!-- Campos de Upload de Imagens -->
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="images">Upload de Imagens</label>
+                <input type="file" name="images" id="images" class="form-control" multiple>
+            </div>
         </div>
 
-        <!-- Botões de Interação. -->
-        <div class="mt-4">
-            <button type="submit" class="btn btn-success me-2">
-                <i>Salvar</i>
-            </button>
-            <a href="{% url 'ticket_list' %}" class="btn btn-secondary">
-                <i>Cancelar</i>
-            </a>
+        <!-- Separador -->
+        <div class="mb-3"></div>
+
+        <!-- Botões de Interação -->
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-success me-2">
+                    <i>Salvar</i>
+                </button>
+                <a href="{% url 'ticket_list' %}" class="btn btn-secondary">
+                    <i>Cancelar</i>
+                </a>
+            </div>
         </div>
     </form>
 </div>
 
-<div>
-    <br><br>
-</div>
+<!-- Espaçamento extra no final -->
+<div class="mb-5"></div>
 {% endblock %}

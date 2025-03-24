@@ -1,5 +1,6 @@
-from django.urls import path
 from . import views
+from django.urls import path
+from chatapp.views import create_ticket_chat
 
 urlpatterns = [
     path('', views.ticket_list, name='ticket_list'),
@@ -12,4 +13,5 @@ urlpatterns = [
     path('arquivado/', views.ticket_archive, name='ticket_archive'),
     path('ticket_gestao_problemas/', views.ticket_gestao_problemas, name='ticket_gestao_problemas'),
     path('tempo_decorrido/<int:pk>/', views.tempo_decorrido, name='tempo_decorrido'),
+    path('ticket/<int:ticket_id>/chat/', create_ticket_chat, name='ticket_chat'),
 ]

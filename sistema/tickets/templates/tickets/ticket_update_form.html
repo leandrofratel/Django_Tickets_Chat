@@ -3,49 +3,27 @@
 
 {% block content %}
 <div class="container mt-3">
-    <h2>Atualizar Incidente</h2>
+    <h2>Atualizar Incidente {{ ticket.codigo_incidente }}</h2>
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="row">
-            <div class="col-md-6">{{ form.codigo_sx|as_crispy_field }}</div>
-            <div class="col-md-6">{{ form.previsao|as_crispy_field }}</div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">{{ form.acoes|as_crispy_field }}</div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">{{ form.solucao_contorno|as_crispy_field }}</div>
-            <div class="col-md-6">{{ form.causa_raiz|as_crispy_field }}</div>
+        
+        <!-- Demais campos do formulário -->
+        {{ form|crispy }}
+        
+        <!-- Upload de imagens -->
+        <div class="mb-3">
+            <label class="form-label">Adicionar Imagens</label>
+            <input type="file" name="images" class="form-control" multiple>
         </div>
 
-        <div class="row">
-            <div class="col-md-4">{{ form.status|as_crispy_field }}</div>
-            <div class="col-md-4">{{ form.grupo_suporte|as_crispy_field }}</div>
-            <div class="col-md-4">{{ form.analista|as_crispy_field }}</div>
+        <!-- Botões -->
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{% url 'ticket_detail' ticket.pk %}" class="btn btn-secondary">
+                Cancelar
+            </a>
         </div>
-
-        <!-- Campos de Upload de Imagens e Arquivos -->
-        <div class="form-group">
-            <label for="images">Upload de Imagens</label>
-            <input type="file" name="images" id="images" class="form-control" multiple>
-        </div>
-
-        <div> <br> </div>
-
-        {% comment %} <div class="form-group">
-            <label for="files">Upload de Arquivos</label>
-            <input type="file" name="files" id="files" class="form-control" multiple>
-        </div> {% endcomment %}
-
-        <div><br></div>
-
-        <button type="submit" class="btn btn-success">Salvar</button>
-        <a href="{% url 'ticket_list' %}" class="btn btn-secondary">Cancelar</a>
     </form>
-</div>
-
-<div>
-    <br>
-    <br>
 </div>
 {% endblock %}

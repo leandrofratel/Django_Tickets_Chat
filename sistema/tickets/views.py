@@ -48,11 +48,6 @@ def ticket_create(request): #? Cria um novo Incidente
             for file in request.FILES.getlist('images'):
                 TicketImage.objects.create(ticket=ticket, image=file)
 
-            #* Processa os arquivos
-            #! Obsoleto
-            # for file in request.FILES.getlist('files'):
-            #     TicketFile.objects.create(ticket=ticket, file=file)
-
             return redirect('ticket_list')
     else:
         form = TicketForm()
@@ -67,25 +62,27 @@ def ticket_update(request, pk): #? Atualiza um Incidente
         exibe o formulário preenchido com os dados do ticket para edição.
     """
     ticket = get_object_or_404(Ticket, pk=pk)
+    
     if request.method == 'POST':
-        update_form = TicketUpdateForm(
-            request.POST, request.FILES, instance=ticket
-        )
+        update_form = TicketUpdateForm(request.POST, instance=ticket)
         if update_form.is_valid():
-            ticket = update_form.save() # Salva as alterações do ticket
-
-            # Processa as novas imagens
+            nova_acao = update_form.cleaned_data.get('nova_acao')
+            if nova_acao:
+                ticket.adicionar_acao(nova_acao, request.user)
+            
+            update_form.save()
+            
+            # Processamento de imagens (mantido igual)
             for file in request.FILES.getlist('images'):
                 TicketImage.objects.create(ticket=ticket, image=file)
-
-            # Processa as novos arquivos
-            for file in request.FILES.getlist('files'):
-                TicketImage.objects.create(ticket=ticket, file=file)
+                
             return redirect('ticket_detail', pk=ticket.pk)
     else:
         update_form = TicketUpdateForm(instance=ticket)
+    
     return render(request, 'tickets/ticket_update_form.html', {
-        'form': update_form, 'ticket': ticket
+        'form': update_form, 
+        'ticket': ticket
     })
 
 @login_required

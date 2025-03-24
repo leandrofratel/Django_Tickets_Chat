@@ -13,21 +13,27 @@ class TicketForm(forms.ModelForm):
         ]
 
         previsao = forms.IntegerField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Previsão em número'}))
-        widgets = {
-            'problema_apresentado': forms.Textarea(attrs={'rows': 1}),
-        }
 
 class TicketUpdateForm(forms.ModelForm):
+    nova_acao = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'rows':4}),
+        label="Ação Realizada"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['solucao_contorno'].required = False
+
     class Meta:
         model = Ticket
         fields = [
-            'codigo_sx', 'acoes', 'solucao_contorno', 'causa_raiz',
-            'status', 'grupo_suporte', 'analista', 'previsao'
+            'codigo_sx', 'status',
+            'grupo_suporte', 'analista',
+            'previsao', 'solucao_contorno'
         ]
         widgets = {
-            'acoes': forms.Textarea(attrs={'rows': 3}),
-            'solucao_contorno': forms.Textarea(attrs={'rows': 3}),
-            'causa_raiz': forms.Textarea(attrs={'rows': 3}),
+            'solucao_contorno': forms.Textarea(attrs={'rows': 4}),
         }
 
 class TicketImageForm(forms.ModelForm):
