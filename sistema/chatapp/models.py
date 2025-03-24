@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from tickets.models import Ticket
 
-# Create your models here.
 class Room(models.Model):
     """
     Representa uma sala de bate-papo no sistema.
@@ -21,7 +21,6 @@ class Room(models.Model):
             str: Nome da sala e seu identificador único.
         """
         return "Room : "+ self.name + " | Id : " + self.slug
-
 
 class Message(models.Model):
     """

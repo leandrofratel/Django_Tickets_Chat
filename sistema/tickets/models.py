@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils.timezone import now, localtime
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.apps import apps
+
 class Ticket(models.Model):
     STATUS_CHOICES = [
         ('Aberto', 'Aberto'),
@@ -201,6 +205,7 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.codigo_incidente} - {self.responsavel}"
+
 
 class TicketImage(models.Model):
     ticket = models.ForeignKey(Ticket, related_name='images', on_delete=models.CASCADE)

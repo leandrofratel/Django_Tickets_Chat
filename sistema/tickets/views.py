@@ -178,3 +178,4 @@ def ticket_registro(request):
         form = UserCreationForm()
 
     return render(request, "registration/registro.html", {"form": form})
+
