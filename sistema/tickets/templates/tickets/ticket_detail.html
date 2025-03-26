@@ -103,7 +103,7 @@
 
                 <!-- Abre uma sala de chat com o número do incidente -->
                  <a href="{% url 'criar_sala_chat' ticket.id %}" class="btn btn-info">
-                    <i class="bi bi-chat-right-dots"></i> Abrir Sala de Chat 
+                    <i class="bi bi-chat-right-dots"></i> Abrir Sala de Chat
                  </a>
             </div>
         </div>
@@ -114,7 +114,7 @@
         <a href="{% url 'ticket_list' %}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Voltar
         </a>
-        <a href="{% url 'criar_sala_chat' ticket.id %}" class="btn btn-warning {% if ticket.status == 'Fechado' %}disabled{% endif %}">
+        <a href="{% url 'ticket_update' ticket.id %}" class="btn btn-warning {% if ticket.status == 'Fechado' %}disabled{% endif %}">
             <i class="fas fa-edit"></i> Editar Incidente
         </a>
     </div>

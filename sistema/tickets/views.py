@@ -1,11 +1,11 @@
-from .forms import PerfilForm
-from django.http import JsonResponse
 from django.contrib import messages
-from .forms import TicketForm, TicketUpdateForm
+from django.http import JsonResponse
+from django.contrib.auth import login
 from .models import Ticket, TicketImage
+from .forms import TicketForm, TicketUpdateForm
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
 
 def tempo_decorrido(request, pk):
     """
@@ -163,17 +163,19 @@ def ticket_dashboard(request): #? Dahsboard com os indicadores
 
     return render(request, 'tickets/ticket_dashboard.html', context)
 
-@login_required
 def ticket_registro(request):
     """
-    Permite a criação de novos usuários.
+    Permite a criação de novos usuários. Solicita:
+    - Nome
+    - Senha
     """
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request, user) # Loga o user automaticamente
             messages.success(request, "Conta criada com sucesso! Faça login para continuar.")
-            return redirect("login")  # Redireciona para a página de login
+            return redirect("ticket_list")  # Redireciona para outra página
     else:
         form = UserCreationForm()
 

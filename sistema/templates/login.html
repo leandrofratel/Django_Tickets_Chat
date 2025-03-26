@@ -1,14 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Login</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    <br>
-    <p>Não tem uma conta? <a href="{% url 'registro' %}">Registre-se aqui</a></p>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-sm" style="width: 100%; max-width: 400px;">
+        <div class="card-body p-4">
+            <h2 class="text-center mb-4">Login</h2>
+            
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-4">
+                <p class="mb-0">Não tem uma conta? <a href="{% url 'registro' %}" class="text-decoration-none">Registre-se aqui</a></p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

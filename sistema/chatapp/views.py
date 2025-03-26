@@ -1,10 +1,11 @@
-from django.shortcuts import render
 from .models import Room, Message
-from django.shortcuts import get_object_or_404, redirect
 from tickets.models import Ticket
-
+from django.shortcuts import render
 from django.utils.text import slugify
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def rooms(request):
     """
     Exibe a lista de todas as salas de bate-papo disponíveis.
@@ -18,6 +19,7 @@ def rooms(request):
     rooms=Room.objects.all()
     return render(request, "chat/rooms.html",{"rooms":rooms})
 
+@login_required
 def room(request,slug):
     """
     Exibe uma sala de bate-papo específica e suas mensagens.
@@ -34,7 +36,7 @@ def room(request,slug):
     
     return render(request, "chat/room.html",{"room_name":room_name, "slug":slug, 'messages':messages})
 
-
+@login_required
 def criar_sala_chat(request, ticket_id):
     # Recupera o ticket com o ID fornecido. Se não existir, levanta Http404.
     ticket = get_object_or_404(Ticket, id=ticket_id)
@@ -55,6 +57,10 @@ def criar_sala_chat(request, ticket_id):
     else:
         print(f"A sala já existe para o ticket: {sala_nome}")
 
+    # Pegando o ticket relacionado à sala de chat
+    ticket = room.ticket if room.ticket else None  
+
     # Redireciona para a página do chat do ticket, usando o ID do ticket.
     # return redirect('ticket_chat', ticket_id=sala_slug)
-    return redirect('room', slug=room.slug)
+    # return redirect('room', slug=room.slug)
+    return render(request, 'chat/room.html', {'room': room, 'room_name': room.name, 'ticket': ticket})
