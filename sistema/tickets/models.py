@@ -1,26 +1,17 @@
 from django.db import models
 from django.utils.timezone import now, localtime
-# from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.apps import apps
 
 class Ticket(models.Model):
     STATUS_CHOICES = [
-        ('Aberto', 'Aberto'),
+        ('Em Andamento', 'Em Andamento'),
         ('Fechado', 'Fechado'),
         ('Resolvido', 'Resolvido'),
-        ('Em Andamento', 'Em Andamento'),
-        ('Designado', 'Designado'),
         ('Em Análise', 'Em Análise'),
-        ('Sala de Crise', 'Sala de Crise'),
     ]
-
     SUPORTE_CHOICES = [
         ('COI - Grupo de Operações Integradas','COI - Grupo de Operações Integradas'),
         ('COI - Gestão de Problemas', 'COI - Gestão de Problemas'),
-        ('Operações IBM','Operações IBM'),
     ]
-
     RECURSO_CRITICIDADE_MAP = {
         'Balcão Único':'Hiper Crítico',
         'Plataforma REDE SP.GOV.BR':'Hiper Crítico',
@@ -51,7 +42,6 @@ class Ticket(models.Model):
         'Sistema Alpha':'Crítico',
         'Valid - IIRGD':'Crítico',
     }
-
     RECURSO_RESPONSAVEL_MAP = {
         'Balcão Único':'Tiago Pretel dos Santos',
         'Plataforma REDE SP.GOV.BR':'Paulo Ambrozevicius Junior',
@@ -82,7 +72,6 @@ class Ticket(models.Model):
         'Sistema Alpha':'Graziella Pica de Lucca',
         'Valid - IIRGD':'Graziella Pica de Lucca',
     }
-
     RECURSOS_CHOICES = [
         ('Balcão Único', 'Balcão Único'),
         ('Central de Transplantes', 'Central de Transplantes'),
@@ -112,45 +101,26 @@ class Ticket(models.Model):
         ('Valid - IIRGD', 'Valid - IIRGD')
     ]
 
-    # Identificadores
+    # Identificadores do Incidente
     codigo_incidente = models.CharField(max_length=50, verbose_name="Incidente", unique=True)
     codigo_sx = models.CharField(max_length=50, verbose_name="SX", default="", blank=True)
     recurso = models.CharField(max_length=50, verbose_name="Recurso", choices=RECURSOS_CHOICES)
     problema_apresentado = models.CharField(max_length=200, verbose_name="Problema Apresentado")
-    analista = models.CharField(max_length=100, default='Não Atribuido', verbose_name="Analista", blank=True, null=True)
+    analista = models.CharField(max_length=100, default="", verbose_name="Analista", blank=True, null=True)
 
-    # Caixas de Texto
+    # Caixas de Texto livre
     historico_acoes = models.TextField(verbose_name="Histórico de Ações", blank=True, editable=False)
     solucao_contorno = models.TextField(verbose_name="Solução de Contorno", blank=True, null=True, default="")
 
-    # Links
-    link_alerta = models.URLField(verbose_name="Alerta Dynatrace", blank=True, null=True)
-    link_itsm = models.URLField(verbose_name="Link do Incidente ITSM", blank=True, null=True)
+    # Links de Acesso
+    link_alerta = models.URLField(verbose_name="Alerta Dynatrace", blank=True, null=True, default="")
+    link_itsm = models.URLField(verbose_name="Link do Incidente ITSM", blank=True, null=True, default="")
 
-    # Choises
-    grupo_suporte = models.CharField(
-        max_length=100,
-        choices=SUPORTE_CHOICES, default='',
-        verbose_name="Grupo de Suporte"
-    )
-    responsavel = models.CharField(
-        max_length=100,
-        verbose_name="Responsável",
-        editable=False
-    )
-    status = models.CharField(
-        max_length=50, 
-        choices=STATUS_CHOICES, 
-        default='Aberto', 
-        verbose_name="Status"
-    )
-    criticidade = models.CharField(
-        max_length=50, 
-        choices='', 
-        default='Crítico', 
-        verbose_name="Criticidade",
-        editable=False
-    )
+    # Campos de Escolha
+    grupo_suporte = models.CharField(max_length=100,choices=SUPORTE_CHOICES, verbose_name="Grupo de Suporte")
+    responsavel = models.CharField(max_length=100, verbose_name="Responsável", editable=False)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Aberto', verbose_name="Status")
+    criticidade = models.CharField(max_length=50, verbose_name="Criticidade", editable=False)
 
     # Campos de Data
     criado_em = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")

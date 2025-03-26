@@ -1,8 +1,9 @@
 from .models import Room, Message
 from tickets.models import Ticket
+from django.db.models import Count
 from django.shortcuts import render
 from django.utils.text import slugify
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 @login_required

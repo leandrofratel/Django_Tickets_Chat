@@ -15,6 +15,22 @@ def tempo_decorrido(request, pk):
     tempo = ticket.tempo_corrente()  # Chama o método que calcula o tempo decorrido
     return JsonResponse({'tempo_decorrido': tempo})
 
+def ticket_registro(request):
+    """
+    Permite a criação de novos usuários. Solicita:
+    - Nome
+    - Senha
+    """
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user) ## Loga o user automaticamente
+            messages.success(request, "Conta criada com sucesso!")
+            return redirect("ticket_meus_incidentes")
+        form = UserCreationForm()
+    return render(request, "registration/registro.html", {"form": form})
+
 @login_required
 def ticket_list(request): ## Exibe a lista de incidentes cadastrados
     """ Lista todos os tickets cadastrados no sistema. """
@@ -125,7 +141,7 @@ def ticket_gestao_problemas(request):
     return render(request, 'tickets/ticket_gestao_problemas.html')
 
 @login_required
-def ticket_dashboard(request): ## Dahsboard com os indicadores
+def ticket_dashboard(request): ## Dashboard com os indicadores
     """
     Apresenta a tela principal de Dashboard com os indicadores abaixo.
     - Status dos Incidentes;
@@ -170,22 +186,3 @@ def ticket_dashboard(request): ## Dahsboard com os indicadores
     }
 
     return render(request, 'tickets/ticket_dashboard.html', context)
-
-def ticket_registro(request):
-    """
-    Permite a criação de novos usuários. Solicita:
-    - Nome
-    - Senha
-    """
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user) ## Loga o user automaticamente
-            messages.success(request, "Conta criada com sucesso! Faça login para continuar.")
-            return redirect("ticket_meus_incidentes")  # Redireciona para outra página
-    else:
-        form = UserCreationForm()
-
-    return render(request, "registration/registro.html", {"form": form})
-

@@ -39,7 +39,7 @@ class Message(models.Model):
     content = models.TextField(blank=True, null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='messages/', blank=True, null=True)  # Novo campo de imagem
+    image = models.ImageField(upload_to='messages/', blank=True, null=True)
 
 
     def __str__(self):
