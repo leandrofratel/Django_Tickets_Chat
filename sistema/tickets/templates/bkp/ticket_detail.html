@@ -6,7 +6,7 @@
     <h2 class="mb-4">Detalhes do Incidente</h2>
     <div class="card shadow">
         <div class="card-body">
-            <!-- Destaque para as informações principais -->
+            <!-- Topo (mantido sem alterações) -->
             <div class="row mb-4">
                 <div class="col-md-4">
                     <h5 class="card-title text-primary"><i class="fas fa-ticket-alt"></i> Nº: {{ ticket.codigo_incidente }}</h5>
@@ -21,10 +21,11 @@
                 </div>
             </div>
 
-            <!-- Organização dos campos em duas colunas -->
+            <!-- Corpo reorganizado em duas colunas -->
             <div class="row">
-                <!-- Coluna 1 -->
-                <div class="col-md-6">
+                <!-- Coluna da Esquerda -->
+                <div class="col-md-5">
+                    <!-- Status e Detalhes -->
                     <div class="card mb-3">
                         <div class="card-header bg-light">
                             <strong>Status e Detalhes</strong>
@@ -40,20 +41,19 @@
                         </ul>
                     </div>
 
+                    <!-- Responsáveis -->
                     <div class="card mb-3">
                         <div class="card-header bg-light">
-                            <strong>Ações</strong>
+                            <strong>Responsáveis</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Ações:</strong> {{ ticket.acoes }}</li>
-                            <li class="list-group-item"><strong>Causa Raiz:</strong> {{ ticket.causa_raiz }}</li>
-                            <li class="list-group-item"><strong>Solução Adotada:</strong> {{ ticket.solucao_contorno }}</li>
+                            <li class="list-group-item"><strong>Grupo de Suporte:</strong> {{ ticket.grupo_suporte }}</li>
+                            <li class="list-group-item"><strong>Analista:</strong> {{ ticket.analista }}</li>
+                            <li class="list-group-item"><strong>Responsável pelo Recurso:</strong> {{ ticket.responsavel }}</li>
                         </ul>
                     </div>
-                </div>
 
-                <!-- Coluna 2 -->
-                <div class="col-md-6">
+                    <!-- Links de Acesso -->
                     <div class="card mb-3">
                         <div class="card-header bg-light">
                             <strong>Links de Acesso</strong>
@@ -69,32 +69,42 @@
                             </li>
                         </ul>
                     </div>
+                </div>
 
+                <!-- Coluna da Direita (campos maiores) -->
+                <div class="col-md-7">
+                    <!-- Ações com scroll -->
                     <div class="card mb-3">
                         <div class="card-header bg-light">
-                            <strong>Responsáveis</strong>
+                            <strong>Ações</strong>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Grupo de Suporte:</strong> {{ ticket.grupo_suporte }}</li>
-                            <li class="list-group-item"><strong>Analista:</strong> {{ ticket.analista }}</li>
-                            <li class="list-group-item"><strong>Responsável pelo Recurso:</strong> {{ ticket.responsavel }}</li>
-                        </ul>
+                        <div class="card-body" style="max-height: 375px; overflow-y: auto;">
+                            {{ ticket.historico_acoes|linebreaks }}
+                        </div>
+                    </div>
+
+                    <!-- Solução Adotada -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Solução Adotada</strong>
+                        </div>
+                        <div class="card-body">
+                            {{ ticket.solucao_contorno|linebreaks }}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Exibição das Imagens -->
+            <!-- Galeria de Imagens Modal (inicialmente oculta) -->
             <div class="mt-4">
-                <h5 class="mb-3"><strong>Imagens:</strong></h5>
-                <div class="row">
-                    {% for image in ticket.images.all %}
-                        <div class="col-md-4 mb-3">
-                            <img src="{{ image.image.url }}" alt="Imagem do Incidente" class="img-fluid rounded shadow-sm">
-                        </div>
-                    {% empty %}
-                        <p class="text-muted">Nenhuma imagem enviada.</p>
-                    {% endfor %}
-                </div>
+                <button type="button" class="btn btn-primary"data-bs-toggle="modal" data-bs-target="#imageGalleryModal">
+                    <i class="fas fa-images"></i> Visualizar Imagens ({{ ticket.images.count }})
+                </button>
+
+                <!-- Abre uma sala de chat com o número do incidente -->
+                 <a href="{% url 'criar_sala_chat' ticket.id %}" class="btn btn-info">
+                    <i class="bi bi-chat-right-dots"></i> Abrir Sala de Chat
+                 </a>
             </div>
         </div>
     </div>
@@ -109,6 +119,34 @@
         </a>
     </div>
     <br>
+</div>
+
+<!-- Modal para Galeria de Imagens -->
+<div class="modal fade" id="imageGalleryModal" tabindex="-1" aria-labelledby="imageGalleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageGalleryModalLabel">Imagens do Incidente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    {% for image in ticket.images.all %}
+                    <div class="col-md-4 mb-3">
+                        <img src="{{ image.image.url }}" alt="Imagem do Incidente" class="img-fluid rounded shadow-sm">
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p class="text-muted">Nenhuma imagem enviada.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -128,7 +166,7 @@
                 if (data.tempo_decorrido !== undefined) {
                     let elemento = document.getElementById(`tempo-decorrido-${ticketId}`);
                     if (elemento) {
-                        elemento.innerText = `${data.tempo_decorrido} Min.`; // Atualiza apenas o tempo
+                        elemento.innerText = `${data.tempo_decorrido} Min.`;
                     } else {
                         console.error(`Elemento não encontrado para o ticket ${ticketId}`);
                     }
@@ -139,9 +177,9 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM carregado. Iniciando intervalo de atualização...');
-        const ticketId = {{ ticket.id }}; // ID do ticket atual
+        const ticketId = {{ ticket.id }};
         console.log(`Configurando intervalo para o ticket ${ticketId}`);
-        setInterval(() => atualizarTempoDecorrido(ticketId), 60000); // Atualiza a cada 60 segundos
+        setInterval(() => atualizarTempoDecorrido(ticketId), 60000);
     });
 </script>
 {% endblock %}

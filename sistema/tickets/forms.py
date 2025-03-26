@@ -11,7 +11,6 @@ class TicketForm(forms.ModelForm):
             'link_alerta', 'link_itsm', 'grupo_suporte',
             'status'
         ]
-
         previsao = forms.IntegerField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Previsão em número'}))
 
 class TicketUpdateForm(forms.ModelForm):
@@ -48,8 +47,6 @@ class PerfilForm(forms.ModelForm):
         fields = ['username', 'email']
 
 class RegistroForm(UserCreationForm):
-    """
-    """
     email = forms.EmailField(required=True)
     class Meta:
         model = User

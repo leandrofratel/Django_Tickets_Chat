@@ -16,7 +16,7 @@ def tempo_decorrido(request, pk):
     return JsonResponse({'tempo_decorrido': tempo})
 
 @login_required
-def ticket_list(request): #? Exibe a lista de incidentes cadastrados
+def ticket_list(request): ## Exibe a lista de incidentes cadastrados
     """ Lista todos os tickets cadastrados no sistema. """
     tickets = Ticket.objects.exclude(status="Fechado")
     return render(request, 'tickets/ticket_list.html', {
@@ -24,7 +24,7 @@ def ticket_list(request): #? Exibe a lista de incidentes cadastrados
     })
 
 @login_required
-def ticket_archive(request): #? Existe todos os incidentes Fechados/ Arquivados
+def ticket_archive(request): ## Exibe todos os incidentes Fechados/ Arquivados
     """ Lista todos os tickets Fechados do sistema. """
     tickets = Ticket.objects.filter(status="Fechado")
     return render(request, 'tickets/ticket_archive.html', {
@@ -32,7 +32,15 @@ def ticket_archive(request): #? Existe todos os incidentes Fechados/ Arquivados
     })
 
 @login_required
-def ticket_create(request): #? Cria um novo Incidente
+def ticket_meus_incidentes(request): 
+    """ Lista todos os tickets do usuário logado. """
+    tickets = Ticket.objects.filter(analista=request.user.username)
+    return render(request, 'tickets/ticket_meus_incidentes.html', {
+        'tickets': tickets
+    })
+
+@login_required
+def ticket_create(request): ## Cria um novo Incidente
     """
     - Se a requisição for POST, 
         valida e salva o ticket, além de processar o upload de imagens.
@@ -54,7 +62,7 @@ def ticket_create(request): #? Cria um novo Incidente
     return render(request, 'tickets/ticket_form.html', {'form': form})
 
 @login_required
-def ticket_update(request, pk): #? Atualiza um Incidente
+def ticket_update(request, pk): ## Atualiza um Incidente
     """
     - Se a requisição for POST, valida e atualiza o ticket, 
         além de processar o upload de novas imagens.
@@ -86,7 +94,7 @@ def ticket_update(request, pk): #? Atualiza um Incidente
     })
 
 @login_required
-def ticket_delete(request, pk): #? Deleta um Incidente
+def ticket_delete(request, pk): ## Deleta um Incidente
     """
     Exclui um ticket existente.
     - Se a requisição for POST, exclui o ticket do banco de dados.
@@ -100,7 +108,7 @@ def ticket_delete(request, pk): #? Deleta um Incidente
     return render(request, 'tickets/ticket_confirm_delete.html', {'ticket': ticket})
 
 @login_required
-def ticket_detail(request, pk): #? Permite visualizar detalhes do incidente
+def ticket_detail(request, pk): ## Permite visualizar detalhes do incidente
     """
     Exibe os detalhes de um ticket específico.
     - Recupera um ticket com base no pk (chave primária)
@@ -117,7 +125,7 @@ def ticket_gestao_problemas(request):
     return render(request, 'tickets/ticket_gestao_problemas.html')
 
 @login_required
-def ticket_dashboard(request): #? Dahsboard com os indicadores
+def ticket_dashboard(request): ## Dahsboard com os indicadores
     """
     Apresenta a tela principal de Dashboard com os indicadores abaixo.
     - Status dos Incidentes;
@@ -173,9 +181,9 @@ def ticket_registro(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user) # Loga o user automaticamente
+            login(request, user) ## Loga o user automaticamente
             messages.success(request, "Conta criada com sucesso! Faça login para continuar.")
-            return redirect("ticket_list")  # Redireciona para outra página
+            return redirect("ticket_meus_incidentes")  # Redireciona para outra página
     else:
         form = UserCreationForm()
 

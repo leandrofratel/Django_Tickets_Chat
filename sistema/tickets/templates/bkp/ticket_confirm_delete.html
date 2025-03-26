@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-header text-white" style="background-color: #A51241;">
+            <h2 class="card-title">Excluir Incidente</h2>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Tem certeza que deseja excluir <strong>"{{ ticket.codigo_incidente }}"</strong>?</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn text-white" style="background-color: #A51241;">Sim, excluir</button>
+                <a href="{% url 'ticket_list' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

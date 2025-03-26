@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.timezone import now, localtime
-
-from django.db.models.signals import post_save
+# from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.apps import apps
 
@@ -20,12 +19,6 @@ class Ticket(models.Model):
         ('COI - Grupo de Operações Integradas','COI - Grupo de Operações Integradas'),
         ('COI - Gestão de Problemas', 'COI - Gestão de Problemas'),
         ('Operações IBM','Operações IBM'),
-    ]
-
-    ANALISTAS_CHOICES = [
-        ('Leandro Fratel','Leandro Fratel'),
-        ('Heráclito Teixeira','Heráclito Teixeira'),
-        ('Camilla Gama','Camilla Gama'),
     ]
 
     RECURSO_CRITICIDADE_MAP = {
@@ -120,13 +113,13 @@ class Ticket(models.Model):
     ]
 
     # Identificadores
-    codigo_incidente = models.CharField(max_length=50, verbose_name="Incidente")
+    codigo_incidente = models.CharField(max_length=50, verbose_name="Incidente", unique=True)
     codigo_sx = models.CharField(max_length=50, verbose_name="SX", default="", blank=True)
     recurso = models.CharField(max_length=50, verbose_name="Recurso", choices=RECURSOS_CHOICES)
-    problema_apresentado = models.CharField(max_length=50, verbose_name="Problema Apresentado")
+    problema_apresentado = models.CharField(max_length=200, verbose_name="Problema Apresentado")
+    analista = models.CharField(max_length=100, default='Não Atribuido', verbose_name="Analista", blank=True, null=True)
 
     # Caixas de Texto
-    # acoes = models.TextField(verbose_name="Histórico de Ações", blank=True) #! Obsoleto
     historico_acoes = models.TextField(verbose_name="Histórico de Ações", blank=True, editable=False)
     solucao_contorno = models.TextField(verbose_name="Solução de Contorno", blank=True, null=True, default="")
 
@@ -144,12 +137,6 @@ class Ticket(models.Model):
         max_length=100,
         verbose_name="Responsável",
         editable=False
-    )
-    analista = models.CharField(
-        max_length=100, 
-        choices=ANALISTAS_CHOICES, 
-        default='Não Atribuido', 
-        verbose_name="Analista"
     )
     status = models.CharField(
         max_length=50, 
