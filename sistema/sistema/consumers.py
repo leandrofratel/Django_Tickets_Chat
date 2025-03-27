@@ -5,8 +5,6 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from chatapp.models import Room, Message, User
 import base64
-from io import BytesIO
-from PIL import Image
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
