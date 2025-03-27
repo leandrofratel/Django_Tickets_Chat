@@ -1,1 +1,1 @@
-gunicorn sistema.wsgi
+gunicorn sistema.wsgi:application --bind 0.0.0.0:8080
