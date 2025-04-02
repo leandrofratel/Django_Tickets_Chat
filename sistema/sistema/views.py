@@ -22,7 +22,6 @@ def alterar_senha(request):
 
     return render(request, 'alterar_senha.html', {'form': form})
 
-# View para login
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -34,12 +33,10 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
-# View para logout
 def logout_view(request):
     logout(request)
     return redirect('login')
 
-# View para registro
 def registro_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -50,7 +47,6 @@ def registro_view(request):
         form = UserCreationForm()
     return render(request, 'registro.html', {'form': form})
 
-# View para lista de tickets (apenas para usuários logados)
 @login_required
 def ticket_list(request):
     return render(request, 'ticket_list.html')

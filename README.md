@@ -56,4 +56,4 @@ Este projeto está sob a licença MIT. Sinta-se livre para usá-lo e modificá-l
 
 ---
 Desenvolvido por Leandro Fratel.
-
+---

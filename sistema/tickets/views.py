@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth import login
 from .models import Ticket, TicketImage
+from django.contrib.auth.models import User
 from .forms import TicketForm, TicketUpdateForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,7 @@ def tempo_decorrido(request, pk):
     Retorna o tempo decorrido de um ticket em formato JSON.
     """
     ticket = get_object_or_404(Ticket, pk=pk)
-    tempo = ticket.tempo_corrente()  # Chama o método que calcula o tempo decorrido
+    tempo = ticket.tempo_corrente()
     return JsonResponse({'tempo_decorrido': tempo})
 
 def ticket_registro(request):

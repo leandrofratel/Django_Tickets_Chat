@@ -4,13 +4,14 @@
 {% block content %}
 <div class="container mt-3">
     <h2>Atualizar Incidente {{ ticket.codigo_incidente }}</h2>
+    <hr>
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <!-- Demais campos do formulário -->
         {{ form|crispy }}
-        
+
         <!-- Upload de imagens -->
         <div class="mb-3">
             <label class="form-label">Adicionar Imagens</label>

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.timezone import now, localtime
+from django.contrib.auth.models import User
 
 class Ticket(models.Model):
     STATUS_CHOICES = [
@@ -73,31 +74,32 @@ class Ticket(models.Model):
         'Valid - IIRGD':'Graziella Pica de Lucca',
     }
     RECURSOS_CHOICES = [
+        ('Agendamento Universal - Agenda SP', 'Agendamento Universal - Agenda SP'),
+        ('Aplicações Mobile', 'Aplicações Mobile'),
         ('Balcão Único', 'Balcão Único'),
+        ('CAR - Cadastro de Atendimento e Relacionamento', 'CAR - Cadastro de Atendimento e Relacionamento'),
         ('Central de Transplantes', 'Central de Transplantes'),
+        ('Certificação Digital', 'Certificação Digital'),
         ('CNH', 'CNH'),
         ('CRV', 'CRV'),
+        ('Delegacia Eletrônica', 'Delegacia Eletrônica'),
+        ('Detecta', 'Detecta'),
+        ('e-Vistoria', 'e-Vistoria'),
+        ('Inquérito Eletrônico', 'Inquérito Eletrônico'),
+        ('Ipva Online', 'Ipva Online'),
+        ('Multas DER', 'Multas DER'),
         ('Plataforma REDE SP.GOV.BR', 'Plataforma REDE SP.GOV.BR'),
         ('Portal Detran', 'Portal Detran'),
         ('Portal Poupatempo', 'Portal Poupatempo'),
-        ('Prova Eletrônica', 'Prova Eletrônica'),
-        ('SEI', 'SEI'),
-        ('TOTEM', 'TOTEM'),
-        ('Agendamento Universal - Agenda SP', 'Agendamento Universal - Agenda SP'),
-        ('CAR - Cadastro de Atendimento e Relacionamento', 'CAR - Cadastro de Atendimento e Relacionamento'),
-        ('Delegacia Eletrônica', 'Delegacia Eletrônica'),
-        ('e-Vistoria', 'e-Vistoria'),
-        ('Multas DER', 'Multas DER'),
         ('Poupafila Centralizado', 'Poupafila Centralizado'),
-        ('SIM', 'SIM'),
-        ('SPJ', 'SPJ'),
-        ('Aplicações Mobile', 'Aplicações Mobile'),
-        ('Detecta', 'Detecta'),
-        ('Inquérito Eletrônico', 'Inquérito Eletrônico'),
-        ('Ipva Online', 'Ipva Online'),
+        ('Prova Eletrônica', 'Prova Eletrônica'),
         ('Rede Palácio do Governo', 'Rede Palácio do Governo'),
         ('S4SP', 'S4SP'),
+        ('SEI', 'SEI'),
+        ('SIM', 'SIM'),
         ('Sistema Alpha', 'Sistema Alpha'),
+        ('SPJ', 'SPJ'),
+        ('TOTEM', 'TOTEM'),
         ('Valid - IIRGD', 'Valid - IIRGD')
     ]
 
@@ -113,7 +115,7 @@ class Ticket(models.Model):
     solucao_contorno = models.TextField(verbose_name="Solução de Contorno", blank=True, null=True, default="")
 
     # Links de Acesso
-    link_alerta = models.URLField(verbose_name="Alerta Dynatrace", blank=True, null=True, default="")
+    link_alerta = models.URLField(verbose_name="Link alerta Dynatrace", blank=True, null=True, default="")
     link_itsm = models.URLField(verbose_name="Link do Incidente ITSM", blank=True, null=True, default="")
 
     # Campos de Escolha
@@ -162,7 +164,6 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.codigo_incidente} - {self.responsavel}"
-
 
 class TicketImage(models.Model):
     ticket = models.ForeignKey(Ticket, related_name='images', on_delete=models.CASCADE)
