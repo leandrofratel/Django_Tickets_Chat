@@ -11,6 +11,5 @@ urlpatterns = [
     path('registro/', views.ticket_registro, name='ticket_registro'),
     path('arquivado/', views.ticket_archive, name='ticket_archive'),
     path('ticket_meus_incidentes/', views.ticket_meus_incidentes, name='ticket_meus_incidentes'),
-    path('ticket_gestao_problemas/', views.ticket_gestao_problemas, name='ticket_gestao_problemas'),
     path('tempo_decorrido/<int:pk>/', views.tempo_decorrido, name='tempo_decorrido'),
 ]

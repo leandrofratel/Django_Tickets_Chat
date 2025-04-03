@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth import login
 from .models import Ticket, TicketImage
-from django.contrib.auth.models import User
 from .forms import TicketForm, TicketUpdateForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -33,7 +32,7 @@ def ticket_registro(request):
     return render(request, "registration/registro.html", {"form": form})
 
 @login_required
-def ticket_list(request): ## Exibe a lista de incidentes cadastrados
+def ticket_list(request):
     """ Lista todos os tickets cadastrados no sistema. """
     tickets = Ticket.objects.exclude(status="Fechado")
     return render(request, 'tickets/ticket_list.html', {
@@ -41,7 +40,7 @@ def ticket_list(request): ## Exibe a lista de incidentes cadastrados
     })
 
 @login_required
-def ticket_archive(request): ## Exibe todos os incidentes Fechados/ Arquivados
+def ticket_archive(request):
     """ Lista todos os tickets Fechados do sistema. """
     tickets = Ticket.objects.filter(status="Fechado")
     return render(request, 'tickets/ticket_archive.html', {
@@ -57,7 +56,7 @@ def ticket_meus_incidentes(request):
     })
 
 @login_required
-def ticket_create(request): ## Cria um novo Incidente
+def ticket_create(request):
     """
     - Se a requisição for POST, 
         valida e salva o ticket, além de processar o upload de imagens.
@@ -79,7 +78,7 @@ def ticket_create(request): ## Cria um novo Incidente
     return render(request, 'tickets/ticket_form.html', {'form': form})
 
 @login_required
-def ticket_update(request, pk): ## Atualiza um Incidente
+def ticket_update(request, pk):
     """
     - Se a requisição for POST, valida e atualiza o ticket, 
         além de processar o upload de novas imagens.
@@ -111,7 +110,7 @@ def ticket_update(request, pk): ## Atualiza um Incidente
     })
 
 @login_required
-def ticket_delete(request, pk): ## Deleta um Incidente
+def ticket_delete(request, pk):
     """
     Exclui um ticket existente.
     - Se a requisição for POST, exclui o ticket do banco de dados.
@@ -125,7 +124,7 @@ def ticket_delete(request, pk): ## Deleta um Incidente
     return render(request, 'tickets/ticket_confirm_delete.html', {'ticket': ticket})
 
 @login_required
-def ticket_detail(request, pk): ## Permite visualizar detalhes do incidente
+def ticket_detail(request, pk):
     """
     Exibe os detalhes de um ticket específico.
     - Recupera um ticket com base no pk (chave primária)
@@ -135,14 +134,7 @@ def ticket_detail(request, pk): ## Permite visualizar detalhes do incidente
     return render(request, 'tickets/ticket_detail.html', {'ticket': ticket})
 
 @login_required
-def ticket_gestao_problemas(request):
-    """
-    Gestão de Problemas
-    """
-    return render(request, 'tickets/ticket_gestao_problemas.html')
-
-@login_required
-def ticket_dashboard(request): ## Dashboard com os indicadores
+def ticket_dashboard(request):
     """
     Apresenta a tela principal de Dashboard com os indicadores abaixo.
     - Status dos Incidentes;
@@ -154,34 +146,30 @@ def ticket_dashboard(request): ## Dashboard com os indicadores
     total_incidentes = Ticket.objects.count()
 
     # Quantidade de incidentes por status.
-    incidentes_abertos = Ticket.objects.filter(status='Aberto').count()
     incidentes_fechados = Ticket.objects.filter(status='Fechado').count()
     incidentes_resolvidos = Ticket.objects.filter(status='Resolvido').count()
     incidentes_andamento = Ticket.objects.filter(status='Em Andamento').count()
     incidentes_analise = Ticket.objects.filter(status='Em Análise').count()
-    incidentes_crise = Ticket.objects.filter(status='Sala de Crise').count()
 
     # Criticidade
-    inc_hiper_criticos = Ticket.objects.filter(criticidade="Hiper Crítico")\
+    inc_crit_alta = Ticket.objects.filter(criticidade="Alta")\
         .count()
-    inc_muito_criticos = Ticket.objects.filter(criticidade="Muito Crítico")\
+    inc_crit_media = Ticket.objects.filter(criticidade="Média")\
         .count()
-    inc_criticos = Ticket.objects.filter(criticidade="Crítico").count()
+    inc_crit_baixa = Ticket.objects.filter(criticidade="Baixa").count()
 
     # Passa as informações para o template
     context = {
         'total_incidentes': total_incidentes,
-        'incidentes_abertos': incidentes_abertos,
         'incidentes_fechados': incidentes_fechados,
         'incidentes_resolvidos': incidentes_resolvidos,
         'incidentes_andamento': incidentes_andamento,
         'incidentes_analise': incidentes_analise,
-        'incidentes_crise': incidentes_crise,
 
         # Criticidade
-        'inc_hiper_criticos':inc_hiper_criticos,
-        'inc_muito_criticos':inc_muito_criticos,
-        'inc_criticos':inc_criticos,
+        'inc_crit_alta':inc_crit_alta,
+        'inc_crit_media':inc_crit_media,
+        'inc_crit_baixa':inc_crit_baixa,
 
         'tickets': tickets
     }
