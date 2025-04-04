@@ -1,59 +1,74 @@
-# Sistema de Gerenciamento de Tickets
+**Sistema de Gerenciamento de Tickets com Chat Integrado**
 
-## Descrição
-Este é um sistema de gerenciamento de tickets desenvolvido em Django. Ele permite que usuários cadastrem tickets, alterem seus status e acompanhem o tempo desde a criação. O sistema também inclui um chat em tempo real para comunicação eficiente entre os usuários.
+O **Sistema** é uma plataforma minimalista e sofisticada para gestão de tickets de suporte, inspirada no design clean do Notion e em interfaces intuitivas como Slack e Microsoft Teams. Desenvolvido com **Django** e **WebSockets**, ele proporciona comunicação em tempo real para a resolução eficiente de chamados.
 
-## Funcionalidades
-- **Cadastro e autenticação de usuários**
-- **Criação de tickets** com título, descrição e status
-- **Alterar status** dos tickets
-- **Contador de tempo** em minutos para cada ticket
-- **Chat em tempo real** para discussão sobre os tickets
+#### Login
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/9697d65f-9d4e-4888-9224-4777758217a7">
+</div>
 
-## Tecnologias Utilizadas
-- **Python 3
-- **Django** (Back-end)
-- **Django Channels** (WebSockets para chat em tempo real)
-- **Bootstrap** (Front-end)
-- **SQLite** (Banco de dados padrão, pode ser alterado para PostgreSQL ou MySQL)
+#### Incidentes
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/30ffe5f7-9b25-4ce7-b366-b42bcff87f94">
+</div>
 
-## Requisitos
-Antes de iniciar, instale os seguintes pacotes:
-```sh
+#### Dashboard
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/98debfff-b583-4f60-a906-e10e04fbc664">
+</div>
+
+#### Chat do Incidente
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/112982b3-af93-4d67-8dca-89d942567143">
+</div>
+
+### **Principais Funcionalidades**
+- **Gestão de Tickets:** Abertura, edição e fechamento de incidentes.
+- **Chat em Tempo Real:** Cada ticket gera automaticamente uma sala de bate-papo dedicada.
+- **Interface Moderna:** Design limpo, minimalista e responsivo, priorizando usabilidade.
+- **Autenticação Segura:** Sistema de login e controle de acessos.
+- **Dashboard Intuitivo:** Visão geral de tickets e interações.
+- **Perfis de Usuário:** Customização e gestão de informações pessoais.
+
+### **Tecnologias Utilizadas**
+- **Backend:** Django + Django Channels (WebSockets para chat em tempo real)
+- **Frontend:** HTML, CSS, JavaScript (com um design minimalista e funcional)
+- **Banco de Dados:** PostgreSQL
+- **Autenticação:** Django Auth
+
+### **Próximos Passos**
+- Melhorias na interface do chat
+- Integração com e-mails para notificação de novos tickets
+- Implementação de um sistema de permissões mais refinado
+
+---
+
+## **Configuração do Ambiente**
+
+### **1. Criando e ativando o ambiente virtual**
+```bash
+python -m venv venv
+source venv/bin/activate  # No Windows, use: venv\Scripts\activate
+```
+
+### **2. Instalando as dependências**
+```bash
 pip install -r requirements.txt
 ```
 
-## Configuração e Execução
-1. Clone o repositório:
-```sh
-git clone https://github.com/leandrofratel/Django_Tickets_Chat.git
-```
-2. Navegue até a pasta do projeto:
-```sh
-cd sistema
-```
-3. Configure o banco de dados:
-```sh
+### **3. Aplicando as migrações do banco de dados**
+```bash
 python manage.py migrate
 ```
-4. Crie um superusuário (Para criar as salas de bate-papo):
-```sh
+
+### **4. Criando um superusuário (opcional, para acessar o admin)**
+```bash
 python manage.py createsuperuser
 ```
-5. Inicie o servidor:
-```sh
+
+### **5. Iniciando o servidor**
+```bash
 python manage.py runserver
 ```
-6. Acesse o sistema em [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-## Como Usar
-- **Cadastro/Login**: Usuários devem se cadastrar e fazer login para acessar o sistema.
-- **Gerenciamento de Tickets**: Criar, editar e alterar status dos tickets.
-- **Chat em Tempo Real**: Acessar salas de bate-papo vinculadas aos tickets.
-
-## Licença
-Este projeto está sob a licença MIT. Sinta-se livre para usá-lo e modificá-lo conforme necessário.
-
----
-Desenvolvido por Leandro Fratel.
----
+Agora, acesse o sistema em **http://127.0.0.1:8000/** e aproveite!
