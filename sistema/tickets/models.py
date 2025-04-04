@@ -22,9 +22,9 @@ class Ticket(models.Model):
         'Epsilon':'Média',
         'Zeta':'Média',
 
-        'Eta':'Baixa',
-        'Teta':'Baixa',
-        'Iota':'Baixa',
+        'Eta':'Alta',
+        'Teta':'Alta',
+        'Iota':'Alta',
     }
     RECURSO_RESPONSAVEL_MAP = {
         'Alfa':'Armando Pinto',
