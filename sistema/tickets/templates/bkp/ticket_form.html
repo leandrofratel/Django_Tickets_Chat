@@ -4,6 +4,7 @@
 {% block content %}
 <div class="container mt-3">
     <h2>{% if form.instance.pk %}Atualizar Incidente{% else %}Novo{% endif %} Incidente</h2>
+    <hr>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         

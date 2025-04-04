@@ -1,25 +1,40 @@
 {% extends 'base.html' %}
 
+{% block title %}Login | Gestão de Incidentes{% endblock %}
+
+{% block page_title %}{% endblock %}
+
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow-sm" style="width: 100%; max-width: 400px;">
-        <div class="card-body p-4">
-            <h2 class="text-center mb-4">Login</h2>
-            
+<div class="container d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 4rem);">
+    <div class="login-container">
+        <div class="text-center mb-5">
+            <h1 class="h3 mb-2">Bem-vindo de volta</h1>
+            <p class="text-muted">Entre para acessar o sistema de Gestão de Incidentes</p>
+        </div>
+        
+        <div class="login-form">
             <form method="POST">
                 {% csrf_token %}
                 
-                <div class="mb-3">
-                    {{ form.as_p }}
+                {% for field in form %}
+                <div class="mb-4">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="text-danger mt-1 small">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
                 </div>
+                {% endfor %}
                 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Entrar</button>
                 </div>
             </form>
             
             <div class="text-center mt-4">
-                <p class="mb-0">Não tem uma conta? <a href="{% url 'registro' %}" class="text-decoration-none">Registre-se aqui</a></p>
+                <p class="mb-0 text-muted">Não tem uma conta? <a href="{% url 'registro' %}" class="notion-link">Registre-se aqui</a></p>
             </div>
         </div>
     </div>

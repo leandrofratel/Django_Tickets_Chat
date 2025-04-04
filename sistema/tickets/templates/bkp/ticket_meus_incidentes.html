@@ -14,7 +14,7 @@
                 <tr>
                     <th>Incidente</th>
                     <th>Recurso</th>
-                    <th>SX</th>
+                    <th>Código Crítico</th>
                     <th>Problema</th>
                     <th>Criticidade</th>
                     <th>Status</th>
@@ -27,7 +27,7 @@
                 {% for ticket in tickets %}
                     <tr>
                         <td class="text-nowrap">{{ ticket.codigo_incidente }}</td>
-                        <td class="text-nowrap">{{ ticket.Recurso }}</td>
+                        <td class="text-nowrap">{{ ticket.recurso }}</td>
                         <td class="text-nowrap">{{ ticket.codigo_sx }}</td>
                         <td class="text-nowrap">{{ ticket.problema_apresentado | truncatechars:35 }}</td>
                         <td class="text-nowrap">{{ ticket.criticidade }}</td>

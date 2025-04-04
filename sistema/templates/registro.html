@@ -1,39 +1,70 @@
 {% extends 'base.html' %}
 
+{% block title %}Registrar | Gestão de Incidentes{% endblock %}
+
+{% block page_title %}{% endblock %}
+
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow-sm" style="width: 100%; max-width: 500px;">
-        <div class="card-body p-4">
-            <h2 class="text-center mb-2">Registrar Conta</h2>
-            <p class="text-center text-muted mb-4">Crie sua conta para acessar o sistema</p>
-            
+<div class="container d-flex justify-content-center align-items-center py-5">
+    <div class="registration-container">
+        <div class="registration-header mb-4">
+            <h1 class="h3 mb-2">Criar nova conta</h1>
+            <p class="text-muted">Registre-se para acessar o sistema de Gestão de Incidentes</p>
+        </div>
+        
+        <div class="registration-form mb-4">
             <form method="POST">
                 {% csrf_token %}
                 
+                {% for field in form %}
                 <div class="mb-4">
-                    {{ form.as_p }}
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="text-danger mt-1 small">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                    {% if field.help_text %}
+                    <div class="form-text small">{{ field.help_text }}</div>
+                    {% endif %}
                 </div>
+                {% endfor %}
                 
-                <div class="d-grid gap-2 mb-3">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="bi bi-person-plus me-2"></i>Registrar
+                <div class="d-grid mt-5">
+                    <button type="submit" class="registration-button">
+                        <i class="bi bi-person-plus"></i>
+                        <span>Criar conta</span>
                     </button>
                 </div>
                 
                 <div class="text-center mt-4">
-                    <p class="mb-0">Já tem uma conta? <a href="{% url 'login' %}" class="text-decoration-none">Faça login aqui</a></p>
+                    <p class="mb-0 text-muted">Já tem uma conta? <a href="{% url 'login' %}" class="notion-link">Faça login aqui</a></p>
                 </div>
             </form>
-            
-            <div class="mt-4">
-                <div class="alert alert-light border" role="alert">
-                    <h5 class="alert-heading"><i class="bi bi-shield-check me-2"></i>Benefícios do registro:</h5>
-                    <ul class="mb-0 ps-3">
-                        <li>Acesso a recursos exclusivos</li>
-                        <li>Salve suas preferências</li>
-                        <li>Acompanhe seu histórico</li>
-                        <li>Receba atualizações importantes</li>
-                    </ul>
+        </div>
+        
+        <div class="registration-benefits">
+            <div class="registration-benefits-header">
+                <i class="bi bi-shield-check"></i>
+                <span>Benefícios do registro</span>
+            </div>
+            <div class="registration-benefits-list">
+                <div class="benefit-item">
+                    <i class="bi bi-lock"></i>
+                    <span>Acesso a recursos exclusivos</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="bi bi-gear"></i>
+                    <span>Salve suas preferências</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Acompanhe seu histórico</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="bi bi-bell"></i>
+                    <span>Receba atualizações importantes</span>
                 </div>
             </div>
         </div>

@@ -1,102 +1,966 @@
-/* static/css/styles.css */
-
+/* Base.html */
 :root {
-    --sidebar-width: 270px;
-    --primary-color: #212529;
-    --accent-color: rgb(46, 65, 163);
-    --hover-bg: #2c3136;
-}
-
-body {
-    min-height: 100vh;
+    --notion-bg: #ffffff;
+    --notion-text: #37352f;
+    --notion-subtle-bg: #f7f6f3;
+    --notion-border: #e9e9e8;
+    --notion-hover: #eeeeee;
+    --notion-sidebar-bg: #fbfbfa;
+    --notion-sidebar-text: #37352f;
+    --notion-sidebar-hover: #eeeeee;
+    --notion-sidebar-active: #f1f1ef;
+    --notion-shadow: rgba(15, 15, 15, 0.05);
+    
+    --sidebar-width: 260px;
+    --header-height: 60px;
+  }
+  
+  /* Base styles */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji";
+    color: var(--notion-text);
+    background-color: var(--notion-bg);
+    line-height: 1.5;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
     overflow-x: hidden;
-    background-color: #f8f9fa;
-}
-
-#wrapper {
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--notion-text);
+  }
+  
+  /* Layout */
+  .layout-wrapper {
     display: flex;
+    min-height: 100vh;
     width: 100%;
-    align-items: stretch;
-}
-
-#sidebar {
+  }
+  
+  /* Sidebar */
+  .sidebar {
     width: var(--sidebar-width);
+    background-color: var(--notion-sidebar-bg);
+    border-right: 1px solid var(--notion-border);
+    height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
-    z-index: 999;
-    background: var(--primary-color);
-    color: #fff;
-    transition: all 0.3s;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-#sidebar .sidebar-header {
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.1);
-}
-
-#sidebar ul li a {
-    padding: 12px 20px;
-    display: block;
-    color: #fff;
-    border-radius: 5px;
-    margin: 4px 10px;
-    transition: all 0.3s;
-}
-
-#sidebar ul li a:hover {
-    background: var(--hover-bg);
-    text-decoration: none;
-}
-
-#sidebar ul li a.active {
-    background: var(--accent-color);
-    color: #fff;
-}
-
-#sidebar ul li a i {
-    margin-right: 10px;
-}
-
-#sidebar .divider {
-    height: 1px;
-    margin: 10px 15px;
-    overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-#page-content-wrapper {
-    width: calc(100% - var(--sidebar-width));
-    padding: 20px;
-    margin-left: var(--sidebar-width);
-    transition: all 0.3s;
-}
-
-#sidebarCollapse {
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar-header {
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--notion-border);
+  }
+  
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .sidebar-toggle {
+    background: none;
+    border: none;
+    color: var(--notion-text);
+    cursor: pointer;
+    padding: 0.25rem;
     display: none;
+  }
+  
+  .sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+  }
+  
+  .sidebar-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .sidebar-section-header {
+    padding: 0 1.25rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b6b6b;
+    margin-bottom: 0.5rem;
+  }
+  
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar-menu-item {
+    margin: 2px 0;
+  }
+  
+  .sidebar-menu-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    color: var(--notion-sidebar-text);
+    text-decoration: none;
+    border-radius: 3px;
+    margin: 0 0.5rem;
+    transition: background-color 0.2s;
+  }
+  
+  .sidebar-menu-link:hover {
+    background-color: var(--notion-sidebar-hover);
+    color: var(--notion-sidebar-text);
+  }
+  
+  .sidebar-menu-link.active {
+    background-color: var(--notion-sidebar-active);
+    font-weight: 500;
+    color: var(--notion-sidebar-text);
+  }
+  
+  .sidebar-menu-link i {
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+    opacity: 0.8;
+    width: 20px;
+    text-align: center;
+  }
+  
+  .sidebar-footer {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--notion-border);
+  }
+  
+  .sidebar-footer-link {
+    display: flex;
+    align-items: center;
+    color: var(--notion-sidebar-text);
+    text-decoration: none;
+    padding: 0.5rem 0;
+  }
+  
+  .sidebar-footer-link i {
+    margin-right: 0.75rem;
+  }
+  
+  /* Main Content */
+  .main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .content-header {
+    height: var(--header-height);
+    border-bottom: 1px solid var(--notion-border);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    background-color: var(--notion-bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .menu-toggle {
+    background: none;
+    border: none;
+    color: var(--notion-text);
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-right: 1rem;
+    display: none;
+  }
+  
+  .page-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+  }
+  
+  .page-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .content-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .sidebar {
+      transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+      transform: translateX(0);
+    }
+    
+    .main-content {
+      margin-left: 0;
+      width: 100%;
+    }
+    
+    .menu-toggle {
+      display: block;
+    }
+    
+    .sidebar-toggle {
+      display: block;
+    }
+    
+    .content-header {
+      padding: 0 1rem;
+    }
+    
+    .content-container {
+      padding: 1.5rem 1rem;
+    }
+  }
+  
+  /* Form elements */
+  .form-control, .form-select {
+    border: 1px solid var(--notion-border);
+    border-radius: 3px;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--notion-bg);
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: var(--notion-text);
+    box-shadow: none;
+  }
+  
+  /* Buttons */
+  .btn {
+    border-radius: 3px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .btn-primary {
+    background-color: var(--notion-text);
+    border-color: var(--notion-text);
+  }
+  
+  .btn-primary:hover {
+    background-color: #2d2c27;
+    border-color: #2d2c27;
+  }
+  
+  .btn-outline-primary {
+    color: var(--notion-text);
+    border-color: var(--notion-border);
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: var(--notion-hover);
+    color: var(--notion-text);
+    border-color: var(--notion-border);
+  }
+  
+  /* Notion-like link */
+  .notion-link {
+    color: var(--notion-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--notion-border);
+    transition: border-color 0.2s;
+  }
+  
+  .notion-link:hover {
+    border-bottom-color: var(--notion-text);
+    color: var(--notion-text);
+  }
+  
+  /* Keep all the other CSS styles you've added for other pages */
+/* Fim Base.html */
+
+
+/* Login.html */
+/* Login page styles */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
 }
 
-@media (max-width: 768px) {
-    #sidebar {
-        margin-left: calc(var(--sidebar-width) * -1);
-    }
+.login-form {
+    background-color: var(--notion-bg);
+    border-radius: 4px;
+}
 
-    #sidebar.active {
-        margin-left: 0;
-    }
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--notion-text);
+}
 
-    #page-content-wrapper {
-        width: 100%;
-        margin-left: 0;
-    }
+/* Style Django form inputs */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.625rem;
+    font-size: 1rem;
+    border: 1px solid var(--notion-border);
+    border-radius: 3px;
+    background-color: var(--notion-bg);
+    transition: border-color 0.15s ease-in-out;
+}
 
-    #sidebarCollapse {
-        display: block;
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        z-index: 1000;
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--notion-text);
+    box-shadow: none;
+}
+
+/* Notion-like link */
+.notion-link {
+    color: var(--notion-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--notion-border);
+    transition: border-color 0.2s;
+}
+
+.notion-link:hover {
+    border-bottom-color: var(--notion-text);
+    color: var(--notion-text);
+}
+
+/* Error messages */
+.text-danger {
+    color: #d73a49 !important;
+}
+
+/* Override Bootstrap button styles for login */
+.btn-primary {
+    background-color: var(--notion-text);
+    border-color: var(--notion-text);
+    color: white;
+    font-weight: 500;
+    padding: 0.625rem 1rem;
+}
+
+.btn-primary:hover {
+    background-color: #2d2c27;
+    border-color: #2d2c27;
+}
+/* Fim Login.html */
+
+/* Perfil.html */
+/* Profile page styles */
+.profile-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 1rem;
+}
+
+.profile-header {
+    text-align: center;
+}
+
+.profile-avatar {
+    display: flex;
+    justify-content: center;
+}
+
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--notion-subtle-bg);
+    color: var(--notion-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 500;
+    border: 1px solid var(--notion-border);
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.profile-description {
+    font-size: 0.95rem;
+}
+
+.profile-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--notion-border);
+}
+
+.profile-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: var(--notion-text);
+}
+
+.profile-info-item {
+    display: flex;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.profile-info-item:hover {
+    background-color: var(--notion-subtle-bg);
+}
+
+.profile-info-label {
+    width: 40%;
+    font-size: 0.9rem;
+    color: #6b6b6b;
+}
+
+.profile-info-value {
+    width: 60%;
+    font-weight: 500;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.profile-action-button {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--notion-border);
+    background-color: var(--notion-bg);
+    color: var(--notion-text);
+    text-decoration: none;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.profile-action-button:hover {
+    background-color: var(--notion-subtle-bg);
+    color: var(--notion-text);
+}
+
+.profile-action-button i {
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.profile-action-danger {
+    color: #d73a49;
+}
+
+.profile-action-danger:hover {
+    background-color: #ffefeb;
+    border-color: #ffcdc7;
+    color: #d73a49;
+}
+/* Fim Perfil.html */
+
+/* Alteração de senha.html */
+/* Password change page styles */
+.password-change-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 1rem;
+}
+
+.password-change-header {
+    text-align: center;
+}
+
+.password-change-form {
+    margin-bottom: 2rem;
+}
+
+.password-change-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.password-action-button {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--notion-border);
+    background-color: var(--notion-bg);
+    color: var(--notion-text);
+    text-decoration: none;
+    transition: background-color 0.2s, border-color 0.2s;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.password-action-button i {
+    margin-right: 0.75rem;
+}
+
+.password-action-secondary {
+    color: var(--notion-text);
+}
+
+.password-action-secondary:hover {
+    background-color: var(--notion-subtle-bg);
+    color: var(--notion-text);
+}
+
+.password-action-primary {
+    background-color: #e6f7ee;
+    border-color: #d1e9db;
+    color: #0b6e4f;
+}
+
+.password-action-primary:hover {
+    background-color: #d1e9db;
+    border-color: #b5d8c3;
+}
+
+.password-tips {
+    background-color: var(--notion-subtle-bg);
+    border-radius: 4px;
+    padding: 1.25rem;
+    border: 1px solid var(--notion-border);
+}
+
+.password-tips-header {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--notion-text);
+}
+
+.password-tips-header i {
+    margin-right: 0.75rem;
+    color: #b58707;
+}
+
+.password-tips-list {
+    padding-left: 1.5rem;
+    margin-bottom: 0;
+}
+
+.password-tips-list li {
+    margin-bottom: 0.5rem;
+    color: #4d4d4d;
+}
+
+.password-tips-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* Form elements specific to password change */
+.password-change-form input[type="password"] {
+    width: 100%;
+    padding: 0.625rem;
+    font-size: 1rem;
+    border: 1px solid var(--notion-border);
+    border-radius: 3px;
+    background-color: var(--notion-bg);
+    transition: border-color 0.15s ease-in-out;
+}
+
+.password-change-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--notion-text);
+    box-shadow: none;
+}
+
+.form-text {
+    color: #6b6b6b;
+    margin-top: 0.25rem;
+}
+
+/* Registration page styles */
+.registration-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 1rem;
+}
+
+.registration-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.registration-form {
+    margin-bottom: 2rem;
+}
+
+.registration-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    border: none;
+    background-color: var(--notion-text);
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    gap: 0.5rem;
+}
+
+.registration-button:hover {
+    background-color: #2d2c27;
+}
+
+.registration-benefits {
+    background-color: var(--notion-subtle-bg);
+    border-radius: 4px;
+    padding: 1.5rem;
+    border: 1px solid var(--notion-border);
+    margin-top: 2rem;
+}
+
+.registration-benefits-header {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    color: var(--notion-text);
+    font-size: 1.05rem;
+}
+
+.registration-benefits-header i {
+    margin-right: 0.75rem;
+    color: #0b6e4f;
+}
+
+.registration-benefits-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.benefit-item i {
+    width: 24px;
+    margin-right: 0.75rem;
+    color: #6b6b6b;
+}
+
+/* Responsive adjustments */
+@media (min-width: 576px) {
+    .registration-benefits-list {
+        grid-template-columns: 1fr 1fr;
     }
 }
+/* Fim Alteração de senha.html */
+
+
+/* Dashboard Tickets.html */
+/* Dashboard styles */
+.dashboard-container {
+    width: 100%;
+  }
+  
+  /* Dashboard sections */
+  .dashboard-section {
+    margin-bottom: 2rem;
+  }
+  
+  .dashboard-section-header {
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--notion-text);
+    margin: 0;
+  }
+  
+  /* Status cards */
+  .status-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .status-card {
+    border-radius: 4px;
+    padding: 1.25rem;
+    transition: transform 0.2s;
+  }
+  
+  .status-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .status-card-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .status-card-value {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .status-card-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
+  /* Status card colors */
+  .status-card-progress {
+    background-color: #fff8e6;
+    color: #b58707;
+    border: 1px solid #f3e2b7;
+  }
+  
+  .status-card-analysis {
+    background-color: #edf2ff;
+    color: #3b5bdb;
+    border: 1px solid #d0d9f0;
+  }
+  
+  .status-card-resolved {
+    background-color: #e6f7ee;
+    color: #0b6e4f;
+    border: 1px solid #d1e9db;
+  }
+  
+  .status-card-closed {
+    background-color: #f1f1ef;
+    color: #4d4d4d;
+    border: 1px solid #e5e5e3;
+  }
+  
+  /* Dashboard main layout */
+  .dashboard-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+  }
+  
+  /* Table section */
+  .dashboard-table-section {
+    margin-bottom: 0;
+  }
+  
+  .dashboard-table-container {
+    overflow-x: auto;
+    border: 1px solid var(--notion-border);
+    border-radius: 4px;
+  }
+  
+  .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .dashboard-table th {
+    background-color: var(--notion-subtle-bg);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 500;
+    color: #6b6b6b;
+    border-bottom: 1px solid var(--notion-border);
+  }
+  
+  .dashboard-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--notion-border);
+  }
+  
+  .dashboard-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .dashboard-table tr:hover {
+    background-color: var(--notion-subtle-bg);
+  }
+  
+  .empty-table-message {
+    text-align: center;
+    color: #6b6b6b;
+    padding: 2rem 0;
+  }
+  
+  /* Status and criticality badges */
+  .status-badge, .criticality-badge {
+    display: inline-flex;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+  
+  .status-progress {
+    background-color: #fff8e6;
+    color: #b58707;
+  }
+  
+  .status-analysis {
+    background-color: #edf2ff;
+    color: #3b5bdb;
+  }
+  
+  .status-resolved {
+    background-color: #e6f7ee;
+    color: #0b6e4f;
+  }
+  
+  .status-closed {
+    background-color: #f1f1ef;
+    color: #4d4d4d;
+  }
+  
+  .criticality-high {
+    background-color: #ffefeb;
+    color: #d73a49;
+  }
+  
+  .criticality-medium {
+    background-color: #fff8e6;
+    color: #b58707;
+  }
+  
+  .criticality-low {
+    background-color: #e6f7ee;
+    color: #0b6e4f;
+  }
+  
+  /* Criticality section */
+  .dashboard-criticality-section {
+    margin-bottom: 0;
+  }
+  
+  .criticality-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .criticality-card {
+    border-radius: 4px;
+    padding: 1.25rem;
+    transition: transform 0.2s;
+  }
+  
+  .criticality-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .criticality-card-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .criticality-card-value {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .criticality-card-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
+  /* Criticality card colors */
+  .criticality-card-high {
+    background-color: #ffefeb;
+    color: #d73a49;
+    border: 1px solid #ffd7d1;
+  }
+  
+  .criticality-card-medium {
+    background-color: #fff8e6;
+    color: #b58707;
+    border: 1px solid #f3e2b7;
+  }
+  
+  .criticality-card-low {
+    background-color: #e6f7ee;
+    color: #0b6e4f;
+    border: 1px solid #d1e9db;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .dashboard-main {
+      grid-template-columns: 1fr;
+    }
+    
+    .status-cards {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    
+    .criticality-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .status-cards {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .criticality-cards {
+      grid-template-columns: 1fr;
+    }
+    
+    .dashboard-table th, 
+    .dashboard-table td {
+      padding: 0.5rem;
+    }
+    
+    .status-card-value,
+    .criticality-card-value {
+      font-size: 2rem;
+    }
+  }
+/* Dashboard Tickets.html */

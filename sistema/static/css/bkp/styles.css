@@ -1,0 +1,102 @@
+/* static/css/styles.css */
+
+:root {
+    --sidebar-width: 270px;
+    --primary-color: #212529;
+    --accent-color: rgb(46, 65, 163);
+    --hover-bg: #2c3136;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: #f8f9fa;
+}
+
+#wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    background: var(--primary-color);
+    color: #fff;
+    transition: all 0.3s;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#sidebar ul li a {
+    padding: 12px 20px;
+    display: block;
+    color: #fff;
+    border-radius: 5px;
+    margin: 4px 10px;
+    transition: all 0.3s;
+}
+
+#sidebar ul li a:hover {
+    background: var(--hover-bg);
+    text-decoration: none;
+}
+
+#sidebar ul li a.active {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+#sidebar ul li a i {
+    margin-right: 10px;
+}
+
+#sidebar .divider {
+    height: 1px;
+    margin: 10px 15px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#page-content-wrapper {
+    width: calc(100% - var(--sidebar-width));
+    padding: 20px;
+    margin-left: var(--sidebar-width);
+    transition: all 0.3s;
+}
+
+#sidebarCollapse {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: calc(var(--sidebar-width) * -1);
+    }
+
+    #sidebar.active {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    #sidebarCollapse {
+        display: block;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1000;
+    }
+}

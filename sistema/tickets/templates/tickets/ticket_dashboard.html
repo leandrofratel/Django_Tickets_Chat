@@ -1,125 +1,133 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Dashboard | Gestão de Incidentes{% endblock %}
+
+{% block page_title %}Dashboard de Incidentes{% endblock %}
+
 {% block content %}
-<div class="container mt-3">
-    <h2 class="mb-4">Dashboard de Incidentes</h2>
-    <hr>
-
-    <!-- Status -->
-    <div class="row">
-        <div>
-            <!-- Subtítulo -->
-            <h5 style="color: rgb(75, 75, 75);">Contagem dos Status</h5>
+<div class="dashboard-container">
+    <!-- Status Cards Section -->
+    <section class="dashboard-section">
+        <div class="dashboard-section-header">
+            <h3 class="dashboard-section-title">Visão Geral por Status</h3>
         </div>
-
-        <!-- Card para Incidentes em Andamento -->
-        <div class="col-md-2 mb-1">
-            <div class="card text-gray border border-0" style="background-color: #f5bf42;">
-                <div class="card-body">
-                    <p class="card-text display-4">{{ incidentes_andamento }}</p>
-                    <p class="card-text">Em Andamento</p>
+        
+        <div class="status-cards">
+            <div class="status-card status-card-progress">
+                <div class="status-card-content">
+                    <div class="status-card-value">{{ incidentes_andamento }}</div>
+                    <div class="status-card-label">Em Andamento</div>
+                </div>
+            </div>
+            
+            <div class="status-card status-card-analysis">
+                <div class="status-card-content">
+                    <div class="status-card-value">{{ incidentes_analise }}</div>
+                    <div class="status-card-label">Em Análise</div>
+                </div>
+            </div>
+            
+            <div class="status-card status-card-resolved">
+                <div class="status-card-content">
+                    <div class="status-card-value">{{ incidentes_resolvidos }}</div>
+                    <div class="status-card-label">Resolvidos</div>
+                </div>
+            </div>
+            
+            <div class="status-card status-card-closed">
+                <div class="status-card-content">
+                    <div class="status-card-value">{{ incidentes_fechados }}</div>
+                    <div class="status-card-label">Fechados</div>
                 </div>
             </div>
         </div>
-
-        <!-- Card para Incidentes em Analise -->
-        <div class="col-md-2 mb-1">
-            <div class="card text-gray border border-0" style="background-color: #f5bf42;">
-                <div class="card-body">
-                    <p class="card-text display-4">{{ incidentes_analise }}</p>
-                    <p class="card-text">Incidentes em Análise</p>
-                </div>
+    </section>
+    
+    <!-- Main Dashboard Content -->
+    <div class="dashboard-main">
+        <!-- Incidents Table Section -->
+        <section class="dashboard-section dashboard-table-section">
+            <div class="dashboard-section-header">
+                <h3 class="dashboard-section-title">Incidentes Recentes</h3>
             </div>
-        </div>
-
-        <!-- Card para Incidentes Resolvidos -->
-        <div class="col-md-2 mb-1">
-            <div class="card text-white border border-0" style="background-color: #4b8d09;">
-                <div class="card-body">
-                    <p class="card-text display-4">{{ incidentes_resolvidos }}</p>
-                    <p class="card-text">Incidentes Resolvidos</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card para Incidentes Fechados -->
-        <div class="col-md-2 mb-1">
-            <div class="card text-white border border-0" style="background-color:rgb(30, 36, 87);">
-                <div class="card-body">
-                    <p class="card-text display-4">{{ incidentes_fechados }}</p>
-                    <p class="card-text">Incidentes Fechados</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <br> <!-- Espaçamento -->
-        <hr>
-    <br> <!-- Espaçamento -->
-
-    <!-- Layout da Tabela e Criticidade -->
-    <div class="row">
-        <!-- Tabela Geral de Incidentes (Ocupa 8 colunas) -->
-        <div class="col-md-8">
-            <h5 style="color: rgb(75, 75, 75);">Tabela Geral de Incidentes</h5>
-            <table class="table table-hover">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Incidente</th>
-                        <th>Código Crítico</th>
-                        <th>Criticidade</th>
-                        <th>Status</th>
-                        <th>Criado em</th>
-                        <th>Minutos</th>
-                    </tr>
-                </thead>
-                <tbody style="font-size: 14px;">
-                    {% for ticket in tickets %}
+            
+            <div class="dashboard-table-container">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Incidente</th>
+                            <th>Código Crítico</th>
+                            <th>Criticidade</th>
+                            <th>Status</th>
+                            <th>Criado em</th>
+                            <th>Minutos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in tickets %}
                         <tr>
                             <td>{{ ticket.codigo_incidente }}</td>
                             <td>{{ ticket.codigo_sx }}</td>
-                            <td>{{ ticket.criticidade }}</td>
-                            <td>{{ ticket.status }}</td>
+                            <td>
+                                <span class="criticality-badge 
+                                    {% if ticket.criticidade == 'Alta' %}criticality-high
+                                    {% elif ticket.criticidade == 'Média' %}criticality-medium
+                                    {% else %}criticality-low{% endif %}">
+                                    {{ ticket.criticidade }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge 
+                                    {% if ticket.status == 'Em Andamento' %}status-progress
+                                    {% elif ticket.status == 'Em Análise' %}status-analysis
+                                    {% elif ticket.status == 'Resolvido' %}status-resolved
+                                    {% else %}status-closed{% endif %}">
+                                    {{ ticket.status }}
+                                </span>
+                            </td>
                             <td>{{ ticket.criado_em | date:"d/m/Y"}}</td>
                             <td>{{ ticket.tempo_corrente }} min.</td>
                         </tr>
-                    {% empty %}
+                        {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center">Nenhum ticket encontrado.</td>
+                            <td colspan="6" class="empty-table-message">Nenhum incidente encontrado.</td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Criticidade (Ocupa 4 colunas) -->
-        <div class="col-md-4">
-            <h5 style="color: rgb(75, 75, 75);">Criticidade</h5>
-            <!-- Card para Incidentes Hiper Críticos -->
-            <div class="card text-white border border-0 mb-3" style="background-color: #db1f48;">
-                <div class="card-body">
-                    <p class="card-text display-4">{{ inc_hiper_criticos }}</p>
-                    <p class="card-text">Alta</p>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- Criticality Section -->
+        <section class="dashboard-section dashboard-criticality-section">
+            <div class="dashboard-section-header">
+                <h3 class="dashboard-section-title">Criticidade</h3>
+            </div>
+            
+            <div class="criticality-cards">
+                <div class="criticality-card criticality-card-high">
+                    <div class="criticality-card-content">
+                        <div class="criticality-card-value">{{ inc_hiper_criticos }}</div>
+                        <div class="criticality-card-label">Alta</div>
+                    </div>
+                </div>
+                
+                <div class="criticality-card criticality-card-medium">
+                    <div class="criticality-card-content">
+                        <div class="criticality-card-value">{{ inc_muito_criticos }}</div>
+                        <div class="criticality-card-label">Média</div>
+                    </div>
+                </div>
+                
+                <div class="criticality-card criticality-card-low">
+                    <div class="criticality-card-content">
+                        <div class="criticality-card-value">{{ inc_criticos }}</div>
+                        <div class="criticality-card-label">Baixa</div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Card para Incidentes Muito Críticos -->
-            <div class="card text-gray border border-0 mb-3" style="background-color: #f5bf42;">
-                <div class="card-body">
-                    <p class="card-text display-4">{{ inc_muito_criticos }}</p>
-                    <p class="card-text">Média</p>
-                </div>
-            </div>
-
-            <!-- Card para Incidentes Críticos -->
-            <div class="card text-white border border-0 mb-3" style="background-color: #59981A;">
-                <div class="card-body">
-                    <p class="card-text display-4">{{ inc_criticos }}</p>
-                    <p class="card-text">Baixa</p>
-                </div>
-            </div>
-        </div>
+        </section>
     </div>
 </div>
 {% endblock %}

@@ -42,20 +42,19 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                
                 <li class="nav-item">
-                    <a class="nav-link" href="">
-                        <i class="bi bi-tags"></i>
-                        <span>Meus Incidentes</span>
+                    <a class="nav-link {% if request.path == '/ticket/novo/' %}active{% endif %}" href="{% url 'ticket_create' %}">
+                        <i class="bi bi-pencil"></i>
+                        <span>Cadastrar Incidente</span>
                     </a>
                 </li>
                 
                 <div class="divider"></div>
                 
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/ticket/novo/' %}active{% endif %}" href="{% url 'ticket_create' %}">
-                        <i class="bi bi-pencil"></i>
-                        <span>Cadastrar Incidente</span>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'tickets/meus_incidentes/' %}active{% endif %}" href="{% url 'ticket_meus_incidentes' %}">
+                        <i class="bi bi-tags"></i>
+                        <span>Meus Incidentes</span>
                     </a>
                 </li>
                 
@@ -74,13 +73,6 @@
                 </li>
                 
                 <div class="divider"></div>
-                
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/ticket/gestao-problemas/' %}active{% endif %}" href="{% url 'ticket_gestao_problemas' %}">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        <span>Gestão de Problemas</span>
-                    </a>
-                </li>
                 
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == '/chat/rooms/' %}active{% endif %}" href="{% url 'rooms' %}">
@@ -116,6 +108,5 @@
 
     <!-- Custom JS -->
     <script src="{% static 'js/navbar.js' %}"></script>
-
 </body>
 </html>

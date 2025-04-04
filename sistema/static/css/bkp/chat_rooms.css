@@ -1,0 +1,17 @@
+.fixed-card {
+    width: 100%;
+    height: 120px; /* Defina um tamanho padrão */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn {
+    width: 100%;
+}
