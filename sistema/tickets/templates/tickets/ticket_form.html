@@ -1,105 +1,46 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Dashboard | Gestão de Incidentes{% endblock %}
+
+{% block page_title %}Cadastrar incidente{% endblock %}
 
 {% block content %}
 <div class="container mt-3">
-    <h2>{% if form.instance.pk %}Atualizar Incidente{% else %}Novo{% endif %} Incidente</h2>
-    <hr>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <!-- Campos para Novo Incidente -->
-        {% if not form.instance.pk %}
-        <div class="row mb-3">
-            <!-- Incidente e Problema na mesma linha -->
-            <!-- Problema Apresentado -->
-            <!-- Código Incidente -->
-            <div class="col-md-6">
-                {{ form.codigo_incidente|as_crispy_field }}
+    <div class="card shadow-sm p-4">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row">
+                {% if not form.instance.pk %}
+                <div class="col-md-6">{{ form.codigo_incidente|as_crispy_field }}</div>
+                <div class="col-md-6">{{ form.problema_apresentado|as_crispy_field }}</div>
+                <div class="col-md-4">{{ form.recurso|as_crispy_field }}</div>
+                <div class="col-md-4">{{ form.status|as_crispy_field }}</div>
+                <div class="col-md-4">{{ form.grupo_suporte|as_crispy_field }}</div>
+                <div class="col-md-6">{{ form.link_alerta|as_crispy_field }}</div>
+                <div class="col-md-6">{{ form.link_itsm|as_crispy_field }}</div>
+                {% else %}
+                <div class="col-md-6">{{ form.codigo_sx|as_crispy_field }}</div>
+                <div class="col-md-12">{{ form.historico_acoes|as_crispy_field }}</div>
+                <div class="col-md-12">{{ form.solucao_contorno|as_crispy_field }}</div>
+                <div class="col-md-4">{{ form.status|as_crispy_field }}</div>
+                <div class="col-md-4">{{ form.grupo_suporte|as_crispy_field }}</div>
+                <div class="col-md-4">{{ form.analista|as_crispy_field }}</div>
+                {% endif %}
             </div>
-            <div class="col-md-6">
-                {{ form.problema_apresentado|as_crispy_field }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <!-- Recurso, Status e Grupo de Suporte na próxima linha -->
-            <div class="col-md-4">
-                {{ form.recurso|as_crispy_field }}
-            </div>
-            <div class="col-md-4">
-                {{ form.status|as_crispy_field }}
-            </div>
-            <div class="col-md-4">
-                {{ form.grupo_suporte|as_crispy_field }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <!-- Link Alerta e Link ITSM na próxima linha -->
-            <div class="col-md-6">
-                {{ form.link_alerta|as_crispy_field }}
-            </div>
-            <div class="col-md-6">
-                {{ form.link_itsm|as_crispy_field }}
-            </div>
-        </div>
-        {% endif %}
-
-        <!-- Campos para Editar Incidente -->
-        {% if form.instance.pk %}
-        <div class="row mb-3">
-            <!-- Código SX e Ações na mesma linha -->
-            <div class="col-md-6">
-                {{ form.codigo_sx|as_crispy_field }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                {{ form.historico_acoes|as_crispy_field }}
-            </div>
-            <!-- Solução de Contorno e Causa Raiz na próxima linha -->
-            <div>
-                {{ form.solucao_contorno|as_crispy_field }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <!-- Status, Grupo de Suporte e Analista na próxima linha -->
-            <div class="col-md-4">
-                {{ form.status|as_crispy_field }}
-            </div>
-            <div class="col-md-4">
-                {{ form.grupo_suporte|as_crispy_field }}
-            </div>
-            <div class="col-md-4">
-                {{ form.analista|as_crispy_field }}
-            </div>
-        </div>
-        {% endif %}
-
-        <!-- Campos de Upload de Imagens -->
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <label for="images">Upload de Imagens</label>
+            
+            <div class="mt-3">
+                <label for="images" class="form-label">Upload de Imagens</label>
                 <input type="file" name="images" id="images" class="form-control" multiple>
             </div>
-        </div>
 
-        <!-- Separador -->
-        <div class="mb-3"></div>
-
-        <!-- Botões de Interação -->
-        <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <button type="submit" class="btn btn-success me-2">
-                    <i>Salvar</i>
-                </button>
-                <a href="{% url 'ticket_list' %}" class="btn btn-secondary">
-                    <i>Cancelar</i>
-                </a>
+            <div class="mt-4 text-center">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar</button>
+                <a href="{% url 'ticket_list' %}" class="btn btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
-
-<!-- Espaçamento extra no final -->
-<div class="mb-5"></div>
 {% endblock %}

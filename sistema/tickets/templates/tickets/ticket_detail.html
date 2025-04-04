@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load humanize %}
+{% load static %}
+
+{% block page_title %}Detalhes do Incidente{% endblock %}
 
 <div class="container mt-3">
-    <h2 class="mb-4">Detalhes do Incidente</h2>
     <div class="card shadow">
         <div class="card-body">
             <!-- Topo (mantido sem alterações) -->
