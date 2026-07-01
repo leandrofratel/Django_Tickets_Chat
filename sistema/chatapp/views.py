@@ -1,9 +1,8 @@
 from .models import Room, Message
 from tickets.models import Ticket
 from django.db.models import Count
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -21,7 +20,7 @@ def rooms(request):
     return render(request, "chat/rooms.html",{"rooms":rooms})
 
 @login_required
-def room(request,slug):
+def room(request, slug):
     """
     Exibe uma sala de bate-papo específica e suas mensagens.
 
@@ -32,10 +31,11 @@ def room(request,slug):
     Returns:
         HttpResponse: Renderiza a página 'chat/room.html' com o nome da sala e suas mensagens.
     """
-    room_name=Room.objects.get(slug=slug).name
-    messages=Message.objects.filter(room=Room.objects.get(slug=slug))
+    room_obj = get_object_or_404(Room, slug=slug)
+    room_name = room_obj.name
+    messages = Message.objects.filter(room=room_obj)
     
-    return render(request, "chat/room.html",{"room_name":room_name, "slug":slug, 'messages':messages})
+    return render(request, "chat/room.html", {"room_name": room_name, "slug": slug, 'messages': messages, 'room': room_obj})
 
 @login_required
 def criar_sala_chat(request, ticket_id):
@@ -52,16 +52,10 @@ def criar_sala_chat(request, ticket_id):
         defaults={'name': sala_nome, 'slug': sala_slug}
     )
 
-    # Verifica se a sala foi criada ou já existia e imprime um mensagem correspondente.
+    # Verifica se a sala foi criada ou já existia.
     if created:
         print(f"Sala criada: {sala_nome} com slug {sala_slug}")
     else:
         print(f"A sala já existe para o ticket: {sala_nome}")
 
-    # Pegando o ticket relacionado à sala de chat
-    ticket = room.ticket if room.ticket else None  
-
-    # Redireciona para a página do chat do ticket, usando o ID do ticket.
-    # return redirect('ticket_chat', ticket_id=sala_slug)
-    # return redirect('room', slug=room.slug)
-    return render(request, 'chat/room.html', {'room': room, 'room_name': room.name, 'ticket': ticket})
+    return redirect('room', slug=room.slug)

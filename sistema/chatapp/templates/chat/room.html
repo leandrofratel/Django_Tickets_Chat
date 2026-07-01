@@ -11,29 +11,35 @@
 <div class="container mt-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="text-dark mb-0">{{ room_name }}</h2>
-        <!-- Botão para voltar as salas de chat -->
-        <a href="{% url 'rooms' %}" class="text-decoration-none">
-            <button type="button" class="btn btn-outline-dark">Voltar as Salas</button>
-        </a>
+        <!-- Botão para voltar ao incidente ou às salas de chat -->
+        {% if room.ticket %}
+            <a href="{% url 'ticket_detail' room.ticket.pk %}" class="text-decoration-none">
+                <button type="button" class="btn btn-outline-dark">Voltar ao Incidente</button>
+            </a>
+        {% else %}
+            <a href="{% url 'rooms' %}" class="text-decoration-none">
+                <button type="button" class="btn btn-outline-dark">Voltar às Salas</button>
+            </a>
+        {% endif %}
     </div>
 
-    <div class="card shadow-lg">
+    <div class="card shadow-lg chat-card">
         <!-- Área de mensagens -->
-        <div class="card-body" id="chatbox" style="height: 65vh; overflow-y: auto; background-color: #f8f9fa; border-radius: 10px;">
+        <div class="card-body chatbox" id="chatbox">
             {% if messages %}
                 {% for message in messages %}
                     <div class="d-flex {% if message.user == request.user %} justify-content-end {% else %} justify-content-start {% endif %} mb-3">
-                        <div class="p-3 rounded {% if message.user == request.user %} bg-black text-white {% else %} bg-light border {% endif %}" style="max-width: 70%; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                            <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
+                        <div class="chat-message {% if message.user == request.user %}sent{% else %}received{% endif %}">
+                            <div class="chat-message-header">
                                 <strong>{{ message.user.username }}</strong>
-                                <small class="{% if message.user == request.user %}text-white-50{% else %}text-muted{% endif %}">{{ message.created_on|date:"d/m H:i" }}</small>
+                                <small>{{ message.created_on|date:"d/m H:i" }}</small>
                             </div>
                             {% if message.content %}
-                                <div class="message-content">{{ message.content }}</div>
+                                <div class="chat-message-content">{{ message.content }}</div>
                             {% endif %}
                             {% if message.image %}
                                 <div class="mt-2">
-                                    <img src="{{ message.image }}" class="img-fluid rounded" style="max-width: 100%;">
+                                    <img src="{{ message.image }}" class="img-fluid rounded" alt="Imagem enviada">
                                 </div>
                             {% endif %}
                         </div>
@@ -47,21 +53,19 @@
         </div>
 
         <!-- Formulário de envio de mensagens -->
-        <div class="card-footer bg-white p-3">
-            <form class="d-flex gap-2">
-                <div class="input-group">
-                    <input class="form-control" placeholder="Digite sua mensagem..." id="my_input" type="text" aria-label="Mensagem">
-                    <button type="button" id="attachment_button" class="btn btn-outline-secondary" aria-label="Anexar imagem">
-                        <i class="bi bi-paperclip"></i>
-                    </button>
-                    <button type="button" id="submit_button" class="btn btn-primary" aria-label="Enviar mensagem">
-                        <i class="bi bi-send"></i>
-                    </button>
-                </div>
+        <div class="card-footer bg-white p-3 chat-input-container">
+            <form class="d-flex gap-2 w-100 align-items-center">
+                <button type="button" id="attachment_button" class="btn btn-outline-secondary" aria-label="Anexar imagem">
+                    <i class="bi bi-paperclip"></i>
+                </button>
+                <input class="form-control chat-input" placeholder="Digite sua mensagem..." id="my_input" type="text" aria-label="Mensagem">
+                <button type="button" id="submit_button" class="btn btn-primary send-button" aria-label="Enviar mensagem">
+                    <i class="bi bi-send"></i>
+                </button>
                 <!-- Input de arquivo para imagens -->
                 <input type="file" id="image_input" style="display: none;" accept="image/*">
             </form>
-            <div id="typing_indicator" class="text-muted small mt-1" style="height: 20px; display: none;">
+            <div id="typing_indicator" class="typing-indicator text-muted small mt-1" style="height: 20px; display: none;">
                 Alguém está digitando...
             </div>
         </div>
@@ -139,18 +143,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const messageDiv = document.createElement("div");
-            messageDiv.classList.add("p-3", "rounded");
-            messageDiv.style.maxWidth = "70%";
-            messageDiv.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
+            messageDiv.classList.add("chat-message");
+            messageDiv.classList.add(data.username === "{{ request.user.username }}" ? "sent" : "received");
             
-            if (data.username === "{{ request.user.username }}") {
-                messageDiv.classList.add("bg-black", "text-white");
-            } else {
-                messageDiv.classList.add("bg-light", "border");
-            }
-
             // Cabeçalho da mensagem com nome e hora
             const header = document.createElement("div");
+            header.classList.add("chat-message-header");
             header.classList.add("d-flex", "justify-content-between", "align-items-center", "gap-2", "mb-1");
             
             const username = document.createElement("strong");
@@ -178,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Conteúdo da mensagem
             if (data.message) {
                 const content = document.createElement("div");
-                content.classList.add("message-content");
+                content.classList.add("chat-message-content");
                 content.textContent = data.message;
                 messageDiv.appendChild(content);
             }

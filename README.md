@@ -37,9 +37,11 @@ O **Sistema** é uma plataforma minimalista e sofisticada para gestão de ticket
 - **Autenticação:** Django Auth
 
 ### **Próximos Passos**
-- Melhorias na interface do chat
-- Integração com e-mails para notificação de novos tickets
-- Implementação de um sistema de permissões mais refinado
+- Interface de chat mais moderno
+- Botão para recolher a sidebar
+- Login com o Google
+- Melhorias na interface do Dashboard
+- Subir a aplicação para o Docker
 
 ---
 

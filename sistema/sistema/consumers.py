@@ -5,7 +5,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from chatapp.models import Room, Message, User
+from chatapp.models import Room, Message
+from django.contrib.auth.models import User
 from django.db import transaction
 from asgiref.sync import sync_to_async
 from collections import defaultdict

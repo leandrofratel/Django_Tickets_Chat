@@ -113,6 +113,9 @@
                 <button class="menu-toggle d-md-none" id="menu-toggle">
                     <i class="bi bi-list"></i>
                 </button>
+                <button class="btn btn-outline-secondary btn-sm sidebar-collapse-toggle me-3" id="sidebar-collapse-toggle" aria-label="Recolher sidebar">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
                 <h2 class="page-title">{% block page_title %}{% endblock %}</h2>
                 <div class="page-actions">
                     {% block page_actions %}{% endblock %}
@@ -147,6 +150,26 @@
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', function() {
                     sidebar.classList.remove('active');
+                });
+            }
+
+            const sidebarCollapseToggle = document.getElementById('sidebar-collapse-toggle');
+            const layoutWrapper = document.querySelector('.layout-wrapper');
+            const storedSidebarCollapsed = localStorage.getItem('sidebarCollapsed');
+
+            if (storedSidebarCollapsed === 'true' && layoutWrapper) {
+                layoutWrapper.classList.add('sidebar-collapsed');
+                if (sidebarCollapseToggle) {
+                    sidebarCollapseToggle.innerHTML = '<i class="bi bi-chevron-right"></i>';
+                }
+            }
+
+            if (sidebarCollapseToggle && layoutWrapper) {
+                sidebarCollapseToggle.addEventListener('click', function () {
+                    layoutWrapper.classList.toggle('sidebar-collapsed');
+                    const collapsed = layoutWrapper.classList.contains('sidebar-collapsed');
+                    localStorage.setItem('sidebarCollapsed', collapsed ? 'true' : 'false');
+                    this.innerHTML = collapsed ? '<i class="bi bi-chevron-right"></i>' : '<i class="bi bi-chevron-left"></i>';
                 });
             }
         });
