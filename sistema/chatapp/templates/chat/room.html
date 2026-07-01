@@ -184,12 +184,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             
             // Se for uma imagem
-            if (data.image) {
+            const imageUrl = data.image_url || data.image;
+            if (imageUrl) {
                 const imgContainer = document.createElement("div");
                 imgContainer.classList.add("mt-2");
                 
                 const img = document.createElement("img");
-                img.src = data.image;
+                img.src = imageUrl;
                 img.classList.add("img-fluid", "rounded");
                 img.style.maxWidth = "100%";
                 
