@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Alterar Senha | Gestão de Incidentes{% endblock %}
+
+{% block page_title %}Alterar Senha{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center py-4">
+    <div class="password-change-container">
+        <div class="password-change-header mb-4">
+            <p class="text-muted">Crie uma nova senha segura para sua conta</p>
+        </div>
+        
+        <div class="password-change-form mb-5">
+            <form method="post">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="mb-4">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="text-danger mt-1 small">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                    {% if field.help_text %}
+                    <div class="form-text small">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <div class="password-change-actions mt-5">
+                    <a href="{% url 'perfil' %}" class="password-action-button password-action-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        <span>Voltar ao Perfil</span>
+                    </a>
+                    
+                    <button type="submit" class="password-action-button password-action-primary">
+                        <i class="bi bi-check-lg"></i>
+                        <span>Salvar Nova Senha</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="password-tips">
+            <div class="password-tips-header">
+                <i class="bi bi-lightbulb"></i>
+                <span>Dicas para uma senha forte</span>
+            </div>
+            <ul class="password-tips-list">
+                <li>Use pelo menos 8 caracteres</li>
+                <li>Combine letras maiúsculas e minúsculas</li>
+                <li>Inclua números e símbolos</li>
+                <li>Evite informações pessoais óbvias</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

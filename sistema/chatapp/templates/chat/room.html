@@ -8,9 +8,9 @@
 </header>
 
 {% if user.is_authenticated %}
-<div class="container mt-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="text-dark mb-0">{{ room_name }}</h2>
+<div class="chat-room-page">
+    <div class="chat-room-header">
+        <h2 class="chat-room-title">{{ room_name }}</h2>
         <!-- Botão para voltar ao incidente ou às salas de chat -->
         {% if room.ticket %}
             <a href="{% url 'ticket_detail' room.ticket.pk %}" class="text-decoration-none">
@@ -23,52 +23,56 @@
         {% endif %}
     </div>
 
-    <div class="card shadow-lg chat-card">
-        <!-- Área de mensagens -->
-        <div class="card-body chatbox" id="chatbox">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="d-flex {% if message.user == request.user %} justify-content-end {% else %} justify-content-start {% endif %} mb-3">
-                        <div class="chat-message {% if message.user == request.user %}sent{% else %}received{% endif %}">
-                            <div class="chat-message-header">
-                                <strong>{{ message.user.username }}</strong>
-                                <small>{{ message.created_on|date:"d/m H:i" }}</small>
-                            </div>
-                            {% if message.content %}
-                                <div class="chat-message-content">{{ message.content }}</div>
-                            {% endif %}
-                            {% if message.image %}
-                                <div class="mt-2">
-                                    <img src="{{ message.image }}" class="img-fluid rounded" alt="Imagem enviada">
-                                </div>
-                            {% endif %}
+    <!-- Área de mensagens -->
+    <div class="chatbox" id="chatbox">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="d-flex {% if message.user == request.user %} justify-content-end {% else %} justify-content-start {% endif %} mb-3">
+                    <div class="chat-message {% if message.user == request.user %}sent{% else %}received{% endif %}">
+                        <div class="chat-message-header">
+                            <strong>{{ message.user.username }}</strong>
+                            <small>{{ message.created_on|date:"d/m H:i" }}</small>
                         </div>
+                        {% if message.content %}
+                            <div class="chat-message-content">{{ message.content }}</div>
+                        {% endif %}
+                        {% if message.image %}
+                            <div class="mt-2">
+                                <img src="{{ message.image }}" class="img-fluid rounded" alt="Imagem enviada">
+                            </div>
+                        {% endif %}
                     </div>
-                {% endfor %}
-            {% else %}
-                <div class="d-flex justify-content-center align-items-center h-100">
-                    <p class="text-muted">Nenhuma mensagem ainda. Seja o primeiro a enviar!</p>
                 </div>
-            {% endif %}
-        </div>
+            {% endfor %}
+        {% else %}
+            <div class="chat-empty-state">
+                <p class="text-muted">Nenhuma mensagem ainda. Seja o primeiro a enviar!</p>
+            </div>
+        {% endif %}
+    </div>
 
-        <!-- Formulário de envio de mensagens -->
-        <div class="card-footer bg-white p-3 chat-input-container">
-            <form class="d-flex gap-2 w-100 align-items-center">
-                <button type="button" id="attachment_button" class="btn btn-outline-secondary" aria-label="Anexar imagem">
-                    <i class="bi bi-paperclip"></i>
-                </button>
-                <input class="form-control chat-input" placeholder="Digite sua mensagem..." id="my_input" type="text" aria-label="Mensagem">
-                <button type="button" id="submit_button" class="btn btn-primary send-button" aria-label="Enviar mensagem">
+    <!-- Composer: caixa unificada de texto + ações -->
+    <div class="chat-input-container">
+        <div id="typing_indicator" class="typing-indicator" style="display: none;">
+            Alguém está digitando...
+        </div>
+        <form class="composer">
+            <textarea class="chat-input" id="my_input" rows="1"
+                placeholder="Digite sua mensagem... (Shift+Enter para nova linha)"
+                aria-label="Mensagem"></textarea>
+            <div class="composer-toolbar">
+                <div class="composer-tools">
+                    <button type="button" id="attachment_button" class="composer-btn attach-btn" aria-label="Anexar imagem">
+                        <i class="bi bi-paperclip"></i>
+                    </button>
+                </div>
+                <button type="button" id="submit_button" class="composer-btn send-button" aria-label="Enviar mensagem">
                     <i class="bi bi-send"></i>
                 </button>
-                <!-- Input de arquivo para imagens -->
-                <input type="file" id="image_input" style="display: none;" accept="image/*">
-            </form>
-            <div id="typing_indicator" class="typing-indicator text-muted small mt-1" style="height: 20px; display: none;">
-                Alguém está digitando...
             </div>
-        </div>
+            <!-- Input de arquivo para imagens -->
+            <input type="file" id="image_input" style="display: none;" accept="image/*">
+        </form>
     </div>
 </div>
 
@@ -237,11 +241,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 room_name: "{{ room_name }}"
             }));
             inputField.value = "";
+            autoGrow();
             
             // Foco de volta no campo de entrada
             inputField.focus();
         }
     }
+
+    // Ajusta a altura do textarea conforme o conteúdo
+    function autoGrow() {
+        inputField.style.height = "auto";
+        const maxHeight = 160;
+        inputField.style.height = Math.min(inputField.scrollHeight, maxHeight) + "px";
+    }
+    inputField.addEventListener("input", autoGrow);
 
     // Função para enviar uma imagem
     function sendImage(imageFile) {
@@ -305,9 +318,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Enviar mensagem ao pressionar Enter
-    inputField.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
+    // Enviar mensagem ao pressionar Enter (Shift+Enter cria nova linha)
+    inputField.addEventListener("keydown", function (e) {
+        // Ignora envio durante composição de IME (chinês/japonês/coreano)
+        if (e.key === "Enter" && !e.shiftKey && !e.isComposing && e.keyCode !== 229) {
             e.preventDefault();
             sendMessage();
         } else {
@@ -338,18 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     
-    // Ajustar altura do chatbox em dispositivos móveis
-    function adjustChatboxHeight() {
-        if (window.innerWidth < 768) {
-            chatbox.style.height = "50vh";
-        } else {
-            chatbox.style.height = "65vh";
-        }
-    }
-    
-    // Ajustar altura inicial e quando a janela for redimensionada
-    adjustChatboxHeight();
-    window.addEventListener("resize", adjustChatboxHeight);
+    // A altura do chatbox é controlada por CSS (layout flex de tela cheia).
 });
 </script>
 

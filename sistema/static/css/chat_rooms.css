@@ -1,57 +1,114 @@
+/* ==========================================================================
+   Chat Rooms (lista de salas) — Optimus UI
+   ========================================================================== */
+
 .chat-rooms-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
 }
 
-.page-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
+.chat-rooms-container .page-title {
+  font-family: "Instrument Sans", system-ui, sans-serif;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #0a0a0a;
+  margin: 0 0 2rem;
 }
 
+/* Grid de cartões */
 .rooms-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
 }
 
+/* Cartão de sala */
 .room-card {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 160px;
+  padding: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e6e6e1;
+  border-radius: 16px;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.room-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.room-card:hover {
+  border-color: #0a0a0a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(10, 10, 10, 0.06);
 }
 
+.room-card .room-title {
+  font-family: "Instrument Sans", system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #0a0a0a;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Rótulo mono opcional acima do título */
+.room-card .room-title::before {
+  content: "SALA";
+  display: block;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a8a82;
+  margin-bottom: 0.5rem;
+}
+
+/* Botão de acesso em pílula preta */
 .room-access-btn {
-    text-decoration: none;
-    background: #000;
-    color: #fff;
-    padding: 8px 15px;
-    border-radius: 5px;
-    transition: background 0.3s;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.35rem;
+  background: #0a0a0a;
+  color: #ffffff;
+  font-family: "Instrument Sans", system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid #0a0a0a;
+  transition: background 0.18s ease, color 0.18s ease;
 }
 
 .room-access-btn:hover {
-    background: #333;
+  background: #ffffff;
+  color: #0a0a0a;
 }
 
+/* Estado vazio */
 .empty-message {
-    text-align: center;
-    font-size: 16px;
-    color: #666;
-    margin-top: 20px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  color: #8a8a82;
+  padding: 3rem 0;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .chat-rooms-container {
+    padding: 1.5rem 1rem 3rem;
+  }
+  .rooms-grid {
+    grid-template-columns: 1fr;
+  }
 }

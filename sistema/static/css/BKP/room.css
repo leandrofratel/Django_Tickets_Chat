@@ -1,0 +1,112 @@
+.chatbox {
+    height: 65vh;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+    border-radius: 0;
+    padding: 24px;
+    box-shadow: inset 0 0 16px rgba(15, 23, 42, 0.05);
+}
+
+.chat-card {
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.chat-message {
+    max-width: 72%;
+    padding: 1rem 1.2rem;
+    border-radius: 20px;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+    word-wrap: break-word;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.chat-message.sent {
+    margin-left: auto;
+    background: #111827;
+    color: #ffffff;
+    border-bottom-right-radius: 6px;
+}
+
+.chat-message.received {
+    margin-right: auto;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #111827;
+    border-bottom-left-radius: 6px;
+}
+
+.chat-message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    opacity: 0.75;
+}
+
+.chat-message-content {
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.chat-message img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    margin-top: 0.65rem;
+}
+
+.chat-input-container {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    align-items: center;
+}
+
+.chat-input {
+    flex: 1;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    padding: 0.95rem 1.1rem;
+}
+
+.send-button {
+    min-width: 54px;
+    border-radius: 999px;
+}
+
+.typing-indicator {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .chatbox {
+        padding: 16px;
+        height: 50vh;
+    }
+
+    .chat-message {
+        max-width: 100%;
+    }
+
+    .chat-input-container {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .chat-input {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .send-button,
+    .btn-outline-secondary {
+        width: 100%;
+    }
+}
