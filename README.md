@@ -4,23 +4,22 @@ O **Sistema** é uma plataforma minimalista e sofisticada para gestão de ticket
 
 #### Login
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/9697d65f-9d4e-4888-9224-4777758217a7">
   <img src="./Print/Perfil.png">
 </div>
 
 #### Incidentes
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/30ffe5f7-9b25-4ce7-b366-b42bcff87f94">
+  <img src="./Print/Lista.png">
 </div>
 
 #### Dashboard
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/98debfff-b583-4f60-a906-e10e04fbc664">
+  <img src="./Print/Dashboard.png">
 </div>
 
 #### Chat do Incidente
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/112982b3-af93-4d67-8dca-89d942567143">
+  <img src="./Print/Chat.png">
 </div>
 
 ### **Principais Funcionalidades**
@@ -38,10 +37,7 @@ O **Sistema** é uma plataforma minimalista e sofisticada para gestão de ticket
 - **Autenticação:** Django Auth
 
 ### **Próximos Passos**
-- Interface de chat mais moderno
-- Botão para recolher a sidebar
 - Login com o Google
-- Melhorias na interface do Dashboard
 - Subir a aplicação para o Docker
 
 ---
