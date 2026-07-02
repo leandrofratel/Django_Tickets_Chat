@@ -139,5 +139,5 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-.Print
-.claude
+.Print/
+.claude/
