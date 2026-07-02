@@ -5,6 +5,7 @@ O **Sistema** é uma plataforma minimalista e sofisticada para gestão de ticket
 #### Login
 <div align="center">
   <img src="https://github.com/user-attachments/assets/9697d65f-9d4e-4888-9224-4777758217a7">
+  <img src="./Print/Perfil.png">
 </div>
 
 #### Incidentes
